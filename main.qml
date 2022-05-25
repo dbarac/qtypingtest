@@ -60,7 +60,8 @@ Window {
             width: 640//root.width - 200
             color: "white"
             horizontalAlignment: Text.AlignHCenter
-            text: "later all come three still young their his than come or see my look day down mile far ask found man little ask say earth write important city"
+            //text: "later all come three still young their his than come or see my look day down mile far ask found man little ask say earth write important city"
+            text: typingTest.guiTestStr;
             font.pixelSize: 20
             wrapMode: Text.WordWrap
             focus: true
@@ -72,6 +73,13 @@ Window {
             //}
         }
 
+        Button {
+            anchors.top: testText.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "typingTest.doSomething()"
+            //onClicked: typingTest.doSomething("TEXT FROM QML")
+            onClicked: typingTest.sampleWordDataset()
+        }
         /*
         TextInput {
             id: input

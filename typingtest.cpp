@@ -1,4 +1,5 @@
 #include <random>
+#include <QDebug>
 
 #include "typingtest.h"
 
@@ -17,6 +18,15 @@ void TypingTest::sampleWordDataset()
         QString& randomWord = m_wordDataset[randomWordIdx(m_rng)];
         m_currentWordSample.push_back(randomWord);
     }
+
+    m_guiTestStr = QString();
+    for (QString& word : m_currentWordSample) {
+        m_guiTestStr.append(word);
+        m_guiTestStr.append(" ");
+    }
+
+    qDebug() << m_guiTestStr;
+    emit guiTestStrChanged();
 }
 
 void TypingTest::processKbInput(char c)
@@ -39,4 +49,19 @@ void TypingTest::processKbInput(char c)
 
     // update display str (emit?)
 
+}
+
+void TypingTest::doSomething(const QString& text) {
+ qDebug() << "TypingTest doSomething called with" << text;
+}
+
+QString TypingTest::guiTestStr() const {
+ return m_guiTestStr;
+}
+
+void TypingTest::setGuiTestStr(QString testStr) {
+ if(m_guiTestStr != testStr) {
+   m_guiTestStr = testStr;
+   emit guiTestStrChanged(); // trigger signal of counter change
+ }
 }
