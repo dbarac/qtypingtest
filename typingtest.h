@@ -14,7 +14,6 @@ public:
     explicit TypingTest(std::vector<QString>& wordDataset, unsigned wordsPerSample, QObject *parent = nullptr);
     void startTest();
     QString updateTestText();
-    void processKbInput(char c);
     std::pair<int, int> getTestResult();
     QString guiTestStr() const;
     void setGuiTestStr(QString testStr);
@@ -43,6 +42,7 @@ private:
 public slots:
     void doSomething(const QString& text);
     void sampleWordDataset();
+    bool processKbInput(QString& input);
 
 signals:
     void guiTestStrChanged();

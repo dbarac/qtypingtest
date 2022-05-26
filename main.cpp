@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    TypingTest *typingTest = new TypingTest(englishTop100, 30, &app);
+    TypingTest *typingTest = new TypingTest(englishTop100, 25, &app);
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("typingTest", typingTest);

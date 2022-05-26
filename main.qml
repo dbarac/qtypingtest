@@ -25,13 +25,15 @@ Window {
         y: title.y + title.height
         width: parent.width; height: 300
         anchors.topMargin: 20
-        color: "#4A4A40"
+        color: "#202020"
+        //color: "#4A4A40" boja za debug
+        property bool testActive: false
 
         Text {
             id: remainingTime
             anchors.horizontalCenter: parent.horizontalCenter
             width: root.width - 200
-            color: "#7ebab5"
+            color: "#c58940"//"#7ebab5"
             horizontalAlignment: Text.AlignHCenter
             text: "30"
             font.pixelSize: 50
@@ -40,14 +42,17 @@ Window {
 
         Timer {
             id: timer
-            interval: 1000; running: true; repeat: true
+            interval: 1000;
+            repeat: true
+            running: false
             onTriggered: function updateRemainingTime() {
                 let remaining = parseInt(remainingTime.text)
-                console.log(remainingTime.text)
+                //console.log(remainingTime.text)
                 if (remaining > 0) {
                     remaining--
                 } else {
                     remaining = 30
+                    timer.stop()
                 }
                 remainingTime.text = remaining.toString()
             }
@@ -58,13 +63,13 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: remainingTime.bottom
             width: 640//root.width - 200
-            color: "white"
+            color: "#847869"//"white"
             horizontalAlignment: Text.AlignHCenter
             //text: "later all come three still young their his than come or see my look day down mile far ask found man little ask say earth write important city"
             text: typingTest.guiTestStr;
-            font.pixelSize: 20
+            font.pixelSize: 23
             wrapMode: Text.WordWrap
-            focus: true
+            //focus: true
             Keys.onPressed: function logPressedKey(event) {
                 console.log("pressed " + String.fromCharCode(event.key).toLowerCase())
             }
@@ -74,18 +79,44 @@ Window {
         }
 
         Button {
+            id: restartBtn
             anchors.top: testText.bottom
+            anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             text: "typingTest.doSomething()"
             //onClicked: typingTest.doSomething("TEXT FROM QML")
-            onClicked: typingTest.sampleWordDataset()
+            onClicked: {
+                remainingTime.text = "30"
+                timer.stop()
+                input.text = ""
+                typingTest.sampleWordDataset()
+            }
+            focusPolicy: Qt.NoFocus
         }
-        /*
+
         TextInput {
             id: input
-            text: "Text"
+            anchors.top: restartBtn.bottom
+            anchors.topMargin: 30
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: 30
+            color: "white"
+            //text: "Text"
+            focus: true
             cursorVisible: true
+            onTextEdited: {
+                if (!parent.testActive) {
+                    parent.testActive = true;
+                    timer.start()
+                }
+
+                let shouldClearInput = typingTest.processKbInput(input.text)
+                if (shouldClearInput) {
+                    input.text = ""
+                }
+            }
         }
+        /*
         Button {
                 text: "Cancel"
                 onClicked: model.revert()
