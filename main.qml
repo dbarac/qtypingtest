@@ -9,20 +9,33 @@ Window {
     color: "#202020"
     id: root
 
+    Image {
+        id: kb
+        //anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.left: parent.left
+        x: 10
+        y: 10
+        source: "qrc:/images/keyboard-solid.svg"
+        sourceSize.width: 50
+        //sourceSize.height: parent.height
+    }
+
     Text {
         id: title
+        y: 5
         color: "#fae1c3"
-        anchors.left: parent.left
+        anchors.left: kb.right
         anchors.leftMargin: 10
         anchors.topMargin: 10
         text: "qtypetest"
         font.bold: false
-        font.pixelSize: 30
+        font.pixelSize: 35
     }
 
     Rectangle {
         id: inputbox
-        y: title.y + title.height
+        y: title.y + kb.height + 20
         width: parent.width; height: 300
         anchors.topMargin: 20
         color: "#202020"
@@ -48,7 +61,7 @@ Window {
             onTriggered: function updateRemainingTime() {
                 let remaining = parseInt(remainingTime.text)
                 //console.log(remainingTime.text)
-                if (remaining > 0) {
+                if (remaining > 1) {
                     remaining--
                 } else {
                     remaining = 30
@@ -83,13 +96,22 @@ Window {
             anchors.top: testText.bottom
             anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "typingTest.doSomething()"
+            text: "Restart"
             //onClicked: typingTest.doSomething("TEXT FROM QML")
             onClicked: {
                 remainingTime.text = "30"
                 timer.stop()
                 input.text = ""
                 typingTest.sampleWordDataset()
+            }
+            font.pixelSize: 25
+            background: Rectangle {
+                   implicitWidth: 120
+                   implicitHeight: 40
+                   color: "#c58940"//"#847869"//button.down ? "#d6d6d6" : "#f6f6f6"
+                   border.color: "#26282a"
+                   border.width: 1
+                   radius: 10
             }
             focusPolicy: Qt.NoFocus
         }
