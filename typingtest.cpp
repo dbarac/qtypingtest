@@ -36,9 +36,9 @@ bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
 }
 
 /*
+ * Update character counts (corrent and total).
  * Set the color of the current word depending on text input correctness.
  * Go to the next word if space was pressed.
- * Return true if the text input field should be cleared. (new word)
  */
 void TypingTest::processKbInput(QString& input)
 {
@@ -78,6 +78,8 @@ void TypingTest::processKbInput(QString& input)
         }
     } else {
         /* set color of current word depending on the correctness of input so far */
+        colorActiveWord(currentTestWord, input);
+        /*
         if (!input.isEmpty() && !currentTestWord.startsWith(input)) {
             wordColor = "#bb1e10";
         } else {
@@ -85,9 +87,33 @@ void TypingTest::processKbInput(QString& input)
         }
         m_displayStrCurrent =
             QString("<font color='%1'><u>%2</u> </font>").arg(wordColor, currentTestWord);
+        */
     }
     m_prevInputLen = input.size();
     updateGuiTestStr(resetTestStr);
+}
+
+void TypingTest::colorActiveWord(const QString& currentWord, const QString& input)
+{
+    QString coloredWord, color;
+    m_displayStrCurrent.clear();
+    m_displayStrCurrent.append("<u>");
+    unsigned len = currentWord.size();
+    for (unsigned i = 0; i < len; i++) {
+        if (i == input.size()) {
+            /* append untyped part of word (default color) */
+            m_displayStrCurrent.append(currentWord.right(len-i));
+            break;
+        }
+        if (input[i] == currentWord[i]) {
+            color = "#fae1c3";
+        } else {
+            color = "#bb1e10"; /* error */
+        }
+        m_displayStrCurrent.append(
+            QString("<font color='%1'>%2</font>").arg(color, currentWord[i]));
+    }
+    m_displayStrCurrent.append("</u>");
 }
 
 void TypingTest::doSomething(const QString& text) {

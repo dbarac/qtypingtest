@@ -20,6 +20,7 @@ public:
 
 private:
     bool newCharIsCorrect(const QString& currentWord, QString& input);
+    void colorActiveWord(const QString& currentWord, const QString& input);
     unsigned currentWordIdx = 0;
     unsigned currentCharIdx = 0;
     unsigned m_wordsPerSample = 0;
