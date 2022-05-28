@@ -9,6 +9,8 @@ Window {
     color: "#202020"
     id: root
 
+    property string wpm: ""
+
     Image {
         id: kb
         //anchors.topMargin: 20
@@ -48,7 +50,7 @@ Window {
             width: root.width - 200
             color: inputbox.testActive ?  "#c58940" : "#847869"//"#7ebab5"
             horizontalAlignment: Text.AlignHCenter
-            text: "30"
+            text: "5"
             font.pixelSize: 60
             wrapMode: Text.WordWrap
         }
@@ -64,9 +66,10 @@ Window {
                 if (remaining > 1) {
                     remaining--
                 } else {
-                    remaining = 30
+                    remaining = 5
                     timer.stop()
                     inputbox.testActive = false
+                    root.wpm = "WPM: " + typingTest.calculateWPM(5);
                 }
                 remainingTime.text = remaining.toString()
             }
@@ -100,7 +103,7 @@ Window {
             text: "Restart"
             //onClicked: typingTest.doSomething("TEXT FROM QML")
             onClicked: {
-                remainingTime.text = "30"
+                remainingTime.text = "5"
                 inputbox.testActive = false
                 timer.stop()
                 input.text = ""
@@ -149,6 +152,7 @@ Window {
     }
 
     Rectangle {
+        property alias wpmacc: wpmacc.text
         id: resultsRect
         anchors.top: inputbox.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -159,7 +163,7 @@ Window {
 
         Text {
             id: wpmacc
-            text: "wpm: 107 accuracy: 80%"
+            text: root.wpm//"wpm: 107 accuracy: 80%"
             font.pixelSize: 30
             color: "#91170c"
             anchors.top: inputbox.bottom

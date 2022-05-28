@@ -39,7 +39,7 @@ void TypingTest::processKbInput(QString& input)
         /* set color for typed word, go to next word */
         QStringView typedWord(&input[0], input.size()-1);
         if (typedWord == currentTestWord) {
-            m_correctChars += currentTestWord.size();
+            m_totalAcceptedChars += input.size();
             wordColor = "#fae1c3";
         } else {
             wordColor = "#bb1e10";
@@ -80,7 +80,7 @@ QString TypingTest::guiTestStr() const {
 void TypingTest::setGuiTestStr(QString testStr) {
     if(m_guiTestStr != testStr) {
         m_guiTestStr = testStr;
-        emit guiTestStrChanged(); // trigger signal of counter change
+        emit guiTestStrChanged();
     }
 }
 
@@ -101,4 +101,13 @@ void TypingTest::updateGuiTestStr(bool initialize=false) {
     m_guiTestStr.append(m_displayStrCurrent);
     m_guiTestStr.append(m_displayStrUntyped);
     emit guiTestStrChanged();
+}
+
+/*
+ * Calculate the number of correctly typed words per minute.
+ * Assume average word length to be 5 like on most typing websites.
+ */
+unsigned TypingTest::calculateWPM(unsigned testTimeSec)
+{
+    return m_totalAcceptedChars / 5 * 60 / testTimeSec;
 }

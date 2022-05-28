@@ -24,6 +24,7 @@ private:
     unsigned m_wordsPerSample = 0;
     unsigned m_correctChars = 0;
     unsigned m_totalTypedChars = 0;
+    unsigned m_totalAcceptedChars = 0; /* for calculating WPM */
     /* formated string (color) containing the current test word sample. */
     QString m_displayStrFinished; /* Completed words in the current sample, so far */
     QString m_displayStrCurrent; /* the current word */
@@ -44,6 +45,7 @@ public slots:
     void sampleWordDataset();
     void processKbInput(QString& input);
     void updateGuiTestStr(bool initialize);
+    unsigned calculateWPM(unsigned testTimeSec);
 
 signals:
     void guiTestStrChanged();
