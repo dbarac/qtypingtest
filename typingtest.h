@@ -42,7 +42,8 @@ private:
 public slots:
     void doSomething(const QString& text);
     void sampleWordDataset();
-    bool processKbInput(QString& input);
+    void processKbInput(QString& input);
+    void updateGuiTestStr(bool initialize);
 
 signals:
     void guiTestStrChanged();

@@ -46,10 +46,10 @@ Window {
             id: remainingTime
             anchors.horizontalCenter: parent.horizontalCenter
             width: root.width - 200
-            color: "#c58940"//"#7ebab5"
+            color: inputbox.testActive ?  "#c58940" : "#847869"//"#7ebab5"
             horizontalAlignment: Text.AlignHCenter
             text: "30"
-            font.pixelSize: 50
+            font.pixelSize: 60
             wrapMode: Text.WordWrap
         }
 
@@ -66,6 +66,7 @@ Window {
                 } else {
                     remaining = 30
                     timer.stop()
+                    inputbox.testActive = false
                 }
                 remainingTime.text = remaining.toString()
             }
@@ -100,9 +101,11 @@ Window {
             //onClicked: typingTest.doSomething("TEXT FROM QML")
             onClicked: {
                 remainingTime.text = "30"
+                inputbox.testActive = false
                 timer.stop()
                 input.text = ""
                 typingTest.sampleWordDataset()
+                typingTest.updateGuiTestStr(true)
             }
             font.pixelSize: 25
             background: Rectangle {
@@ -122,7 +125,7 @@ Window {
             anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             font.pixelSize: 30
-            color: "white"
+            color: "#fae1c3"
             //text: "Text"
             focus: true
             cursorVisible: true
@@ -131,73 +134,36 @@ Window {
                     parent.testActive = true;
                     timer.start()
                 }
-
+                /*
                 let shouldClearInput = typingTest.processKbInput(input.text)
                 if (shouldClearInput) {
+                    input.text = ""
+                }*/
+                typingTest.processKbInput(input.text)
+                let pressedSpace = input.text.length > 0 && input.text.slice(-1) === " "
+                if (pressedSpace) {
                     input.text = ""
                 }
             }
         }
-        /*
-        Button {
-                text: "Cancel"
-                onClicked: model.revert()
-            }
-        Button {
-            text: "A button"
-            style: ButtonStyle {
-                background: Rectangle {
-                    implicitWidth: 100
-                    implicitHeight: 25
-                    border.width: control.activeFocus ? 2 : 1
-                    border.color: "#888"
-                    radius: 4
-                    gradient: Gradient {
-                        GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
-                        GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
-                    }
-                }
-            }
-        }
-        Button {
-            id: control
-            text: qsTr("Restart")
-            anchors.top: testText.bottom
-            anchors.topMargin: 20
-            anchors.horizontalCenter: parent.horizontalCenter
+    }
 
-            contentItem: Text {
-                text: control.text
-                //font: control.font
-                font.pixelSize: 30
-                opacity: enabled ? 1.0 : 0.3
-                color: control.down ? "#17a81a" : "#21be2b"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: 140
-                implicitHeight: 60
-                opacity: enabled ? 1 : 0.3
-                //border.color: control.down ? "#7ebab5" "#17a81a" : "#21be2b"
-                border.color: "#7ebab5"
-                color: "#4A4A4A"
-                border.width: 1
-                radius: 2
-            }
-        }
+    Rectangle {
+        id: resultsRect
+        anchors.top: inputbox.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "#847869"
+        width: 640
+        height: 200
+        //y: inputbox.height
 
         Text {
-            //anchors.fill: parent;
-            anchors.top: control.bottom
-            text: '<font color="red">I am the </font><b>very</b> eee of' +
-                         '<p>a <span style="text-decoration: overline">modern</span> ' +
-                         '<i>major</i>!</p>'
-            font.pointSize: 14
-            textFormat: Text.RichText
+            id: wpmacc
+            text: "wpm: 107 accuracy: 80%"
+            font.pixelSize: 30
+            color: "#91170c"
+            anchors.top: inputbox.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
         }
-    */
     }
 }
