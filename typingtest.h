@@ -19,9 +19,11 @@ public:
     void setGuiTestStr(QString testStr);
 
 private:
+    bool newCharIsCorrect(const QString& currentWord, QString& input);
     unsigned currentWordIdx = 0;
     unsigned currentCharIdx = 0;
     unsigned m_wordsPerSample = 0;
+    unsigned m_prevInputLen = 0;
     unsigned m_correctChars = 0;
     unsigned m_totalTypedChars = 0;
     unsigned m_totalAcceptedChars = 0; /* for calculating WPM */
@@ -46,6 +48,7 @@ public slots:
     void processKbInput(QString& input);
     void updateGuiTestStr(bool initialize);
     unsigned calculateWPM(unsigned testTimeSec);
+    unsigned calculateAccuracy();
 
 signals:
     void guiTestStrChanged();

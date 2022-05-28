@@ -24,6 +24,17 @@ void TypingTest::sampleWordDataset()
     }
 }
 
+bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
+{
+    if (input.size() > currentWord.size()) {
+        return input.endsWith(" ") ? true : false;
+    }
+    if (input.back() != currentWord[input.size()-1]) {
+        return false;
+    }
+    return true;
+}
+
 /*
  * Set the color of the current word depending on text input correctness.
  * Go to the next word if space was pressed.
@@ -35,6 +46,15 @@ void TypingTest::processKbInput(QString& input)
     QString wordColor;
     bool resetTestStr = false;
 
+    if (!input.isEmpty()) {
+        /* check if new character or backspace  */
+        if (input.size() > m_prevInputLen) {
+            if (newCharIsCorrect(currentTestWord, input)) {
+                m_correctChars++;
+            }
+            m_totalTypedChars++;
+        }
+    }
     if (!input.isEmpty() && input.endsWith(" ")) {
         /* set color for typed word, go to next word */
         QStringView typedWord(&input[0], input.size()-1);
@@ -66,6 +86,7 @@ void TypingTest::processKbInput(QString& input)
         m_displayStrCurrent =
             QString("<font color='%1'><u>%2</u> </font>").arg(wordColor, currentTestWord);
     }
+    m_prevInputLen = input.size();
     updateGuiTestStr(resetTestStr);
 }
 
@@ -105,9 +126,15 @@ void TypingTest::updateGuiTestStr(bool initialize=false) {
 
 /*
  * Calculate the number of correctly typed words per minute.
- * Assume average word length to be 5 like on most typing websites.
+ * Assume average word length is 5 like on most typing websites.
  */
 unsigned TypingTest::calculateWPM(unsigned testTimeSec)
 {
     return m_totalAcceptedChars / 5 * 60 / testTimeSec;
+}
+
+unsigned TypingTest::calculateAccuracy()
+{
+    float acc = static_cast<float>(m_correctChars) / m_totalTypedChars;
+    return static_cast<unsigned>(acc * 100);
 }

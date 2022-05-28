@@ -9,7 +9,7 @@ Window {
     color: "#202020"
     id: root
 
-    property string wpm: ""
+    property string wpmacc: ""
 
     Image {
         id: kb
@@ -69,7 +69,8 @@ Window {
                     remaining = 5
                     timer.stop()
                     inputbox.testActive = false
-                    root.wpm = "WPM: " + typingTest.calculateWPM(5);
+                    root.wpmacc = "WPM: " + typingTest.calculateWPM(5) +
+                                  " Accuracy: " + typingTest.calculateAccuracy() + "%"
                 }
                 remainingTime.text = remaining.toString()
             }
@@ -107,6 +108,7 @@ Window {
                 inputbox.testActive = false
                 timer.stop()
                 input.text = ""
+                root.wpmacc = ""
                 typingTest.sampleWordDataset()
                 typingTest.updateGuiTestStr(true)
             }
@@ -136,6 +138,7 @@ Window {
                 if (!parent.testActive) {
                     parent.testActive = true;
                     timer.start()
+                    root.wpmacc = ""
                 }
                 /*
                 let shouldClearInput = typingTest.processKbInput(input.text)
@@ -163,7 +166,7 @@ Window {
 
         Text {
             id: wpmacc
-            text: root.wpm//"wpm: 107 accuracy: 80%"
+            text: root.wpmacc//"wpm: 107 accuracy: 80%"
             font.pixelSize: 30
             color: "#91170c"
             anchors.top: inputbox.bottom
