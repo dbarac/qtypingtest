@@ -46,14 +46,12 @@ void TypingTest::processKbInput(QString& input)
     QString wordColor;
     bool resetTestStr = false;
 
-    if (!input.isEmpty()) {
-        /* check if new character or backspace  */
-        if (input.size() > m_prevInputLen) {
-            if (newCharIsCorrect(currentTestWord, input)) {
-                m_correctChars++;
-            }
-            m_totalTypedChars++;
+    /* check if new character or backspace  */
+    if (input.size() > m_prevInputLen) {
+        if (newCharIsCorrect(currentTestWord, input)) {
+            m_correctChars++;
         }
+        m_totalTypedChars++;
     }
     if (!input.isEmpty() && input.endsWith(" ")) {
         /* set color for typed word, go to next word */
@@ -79,15 +77,6 @@ void TypingTest::processKbInput(QString& input)
     } else {
         /* set color of current word depending on the correctness of input so far */
         colorActiveWord(currentTestWord, input);
-        /*
-        if (!input.isEmpty() && !currentTestWord.startsWith(input)) {
-            wordColor = "#bb1e10";
-        } else {
-            wordColor = "#847869";
-        }
-        m_displayStrCurrent =
-            QString("<font color='%1'><u>%2</u> </font>").arg(wordColor, currentTestWord);
-        */
     }
     m_prevInputLen = input.size();
     updateGuiTestStr(resetTestStr);
@@ -95,7 +84,7 @@ void TypingTest::processKbInput(QString& input)
 
 void TypingTest::colorActiveWord(const QString& currentWord, const QString& input)
 {
-    QString coloredWord, color;
+    QString color;
     m_displayStrCurrent.clear();
     m_displayStrCurrent.append("<u>");
     unsigned len = currentWord.size();
