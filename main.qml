@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Window {
     width: 1000
@@ -173,4 +174,134 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
+
+    TabBar {
+        anchors.top: resultsRect.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        id: bar
+        width: resultsRect.width
+        font.pixelSize: 24
+        background: Rectangle {
+            color: "transparent"
+        }
+        spacing: 5
+        TabButton {
+            //icon.name: "icon"
+            width: implicitWidth
+            icon.source: "qrc:/images/spell-check-solid.svg"
+            icon.width: 24
+            icon.height: 24
+            icon.color: hovered ?  "#fae1c3" : "#847869"
+            display: AbstractButton.TextBesideIcon
+            palette {
+                buttonText: hovered ?  "#fae1c3" : "#847869"
+            }
+            text: "Test"
+            background: Rectangle {
+                color: "transparent"
+            }
+        }
+        TabButton {
+            //icon.name: "icon"
+            width: implicitWidth
+            icon.source: "qrc:/images/list-ol-solid.svg"
+            icon.width: 24
+            icon.height: 24
+            icon.color: hovered ?  "#fae1c3" : "#847869"
+            display: AbstractButton.TextBesideIcon
+            palette {
+                buttonText: hovered ?  "#fae1c3" : "#847869"
+            }
+            text: "Results"
+            background: Rectangle {
+                color: "transparent"
+            }
+        }
+        TabButton {
+            //icon.name: "icona"
+            icon.source: "qrc:/images/circle-info-solid.svg"
+            icon.height: 24
+            icon.width: 24
+            width: implicitWidth
+            icon.color: hovered ?  "#fae1c3" : "#847869"
+            display: AbstractButton.TextBesideIcon
+            palette {
+                buttonText: hovered ?  "#fae1c3" : "#847869"
+            }
+            text: "Info"
+            background: Rectangle {
+                color: "transparent"
+            }
+        }
+        /*TabButton {
+            id: but
+            text: qsTr("Discover")
+            property string mycolor: hovered ?  "#fae1c3" : "#847869"
+            contentItem: Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                Image {
+                    source: "qrc:/images/list-ol-solid.svg"
+                    width: 30
+                    height: 30
+                    y: parent.y + 1
+                    //color: "red"
+                }
+                Text {
+                    text: " ddd"
+                    font.pixelSize: 24
+                    color: but.mycolor
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+            background: Rectangle {
+                color: "transparent"
+                border.color: "transparent"
+            }
+        }
+        TabButton {
+            id: but2
+            text: qsTr("Discover")
+            property string mycolor: hovered ?  "#fae1c3" : "#847869"
+            contentItem: Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                Image {
+                    source: "qrc:/images/keyboard-solid.svg"
+                    width: 30
+                    height: 30
+                    y: parent.y + 1
+                }
+                Text {
+                    text: " ddd"
+                    font.pixelSize: 24
+                    color: but2.mycolor
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+            background: Rectangle {
+                color: "transparent"
+                border.color: "transparent"
+            }
+        }*/
+    }
+
+    /*StackLayout {
+        width: parent.width
+        currentIndex: bar.currentIndex
+        anchors.top: bar.bottom
+        Item {
+            id: homeTab
+            Rectangle {
+                id: redrect
+                color: "red"
+                width: 100
+                height: 100
+            }
+        }
+        Item {
+            id: discoverTab
+        }
+        Item {
+            id: activityTab
+        }
+    }*/
 }
