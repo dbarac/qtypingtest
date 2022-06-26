@@ -1,4 +1,5 @@
 QT += quick
+QT += charts
 
 SOURCES += \
         main.cpp \

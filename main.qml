@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtCharts
 
 Window {
     width: 1000
@@ -85,7 +86,10 @@ Window {
             width: 640//root.width - 200
             color: "#847869"//"white"
             horizontalAlignment: Text.AlignHCenter
-            //text: "later all come three still young their his than come or see my look day down mile far ask found man little ask say earth write important city"
+
+            //FontLoader { id: plex; source: "qrc:/fonts/IBMPlexMono-Regular.ttf" }
+            //font.family: plex.name
+
             text: typingTest.guiTestStr;
             font.pixelSize: 23
             wrapMode: Text.WordWrap
@@ -104,6 +108,13 @@ Window {
             anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Restart"
+
+            icon.source: "qrc:/images/arrow-rotate-right-solid.svg"
+            icon.width: 24
+            icon.height: 24
+            //icon.color: getButtonColor()
+            display: AbstractButton.TextBesideIcon
+
             //onClicked: typingTest.doSomething("TEXT FROM QML")
             onClicked: {
                 remainingTime.text = "5"
@@ -116,7 +127,7 @@ Window {
             }
             font.pixelSize: 25
             background: Rectangle {
-                   implicitWidth: 120
+                   implicitWidth: 130
                    implicitHeight: 40
                    color: "#c58940"//"#847869"//button.down ? "#d6d6d6" : "#f6f6f6"
                    border.color: "#26282a"
@@ -161,9 +172,11 @@ Window {
         id: resultsRect
         anchors.top: inputbox.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: "#847869"
+        color: "#202020" //"#847869"
+        border.color: "#847869"
+        border.width: 2
         width: 640
-        height: 200
+        height: 300
         //y: inputbox.height
 
         Text {
@@ -174,6 +187,74 @@ Window {
             anchors.top: inputbox.bottom
             anchors.horizontalCenter: parent.horizontalCenter
         }
+
+
+        ChartView {
+            title: "Test results"
+            titleFont.pixelSize: 22
+            //titleFont.bold: true
+            titleColor: "#847869"
+
+            anchors.top: wpmacc.bottom
+            anchors.fill: parent
+            antialiasing: true
+            legend.visible: false
+            //width: 640//wpmacc.width
+            //height: 200//wpmacc.height
+            backgroundColor: "transparent"
+            theme: ChartView.ChartThemeBrownSand
+
+            LineSeries {
+                id: series
+                name: "LineSeries"
+                color: "#91170c"
+                width: 3
+                axisX: ValueAxis {
+                    color: "#847869"
+                    labelsColor: "#847869"
+                    labelsFont.pixelSize: 14
+                    labelsFont.bold: true
+                    gridLineColor: "#847869"
+                    titleText:"<font color='#847869'>Time (s)</font>"
+                }
+                axisY: ValueAxis {
+                    color: "#847869"
+                    labelsColor: "#847869"
+                    labelsFont.pixelSize: 14
+                    labelsFont.bold: true
+                    gridLineColor: "#847869"
+                    min: 0
+                    max: {
+                        let max = 0
+                        for (let i = 0; i < series.count; i++) {
+                            let wpm = series.at(i).y
+                            if (wpm > max) {
+                                max = wpm
+                            }
+                        }
+                        return max
+                    }
+                    //titleText: "Current WPM"
+                    titleText:"<font color='#847869'>Current WPM</font>"
+                    //titleBrush:  "#847869"
+                }
+                XYPoint { x: 1; y: 70 }
+                XYPoint { x: 2; y: 72 }
+                XYPoint { x: 3; y: 68 }
+                XYPoint { x: 4; y: 75 }
+                XYPoint { x: 5; y: 80 }
+                XYPoint { x: 6; y: 82 }
+                XYPoint { x: 7; y: 68 }
+                XYPoint { x: 8; y: 84 }
+                XYPoint { x: 9; y: 88 }
+                XYPoint { x: 10; y: 90 }
+                XYPoint { x: 11; y: 92 }
+                XYPoint { x: 12; y: 78 }
+                XYPoint { x: 13; y: 95 }
+                XYPoint { x: 14; y: 105 }
+                XYPoint { x: 15; y: 107 }
+            }
+        }
     }
 
     TabBar {
@@ -183,6 +264,8 @@ Window {
         id: bar
         width: resultsRect.width
         font.pixelSize: 24
+
+        // draw line below tabs
         background: Rectangle {
             color: "#fae1c3"//"transparent"
             height: 2
@@ -191,9 +274,9 @@ Window {
         spacing: 5
 
         Repeater {
-            model: ["spell-check-solid", "list-ol-solid", "circle-info-solid"]
+            model: ["test", "results", "info"]
 
-            TabButton {
+            delegate: TabButton {
                 width: implicitWidth
                 function getButtonColor() {
                     if (bar.currentIndex === TabBar.index) {
