@@ -38,8 +38,9 @@ Window {
 
     Rectangle {
         id: inputbox
-        y: title.y + kb.height + 20
+        //y: title.y + kb.height + 20
         width: parent.width; height: 300
+        anchors.top: bar.bottom
         anchors.topMargin: 20
         color: "#202020"
         //color: "#4A4A40" boja za debug
@@ -176,29 +177,86 @@ Window {
     }
 
     TabBar {
-        anchors.top: resultsRect.bottom
+        //anchors.top: resultsRect.bottom
+        y: title.y + kb.height + 20
         anchors.horizontalCenter: parent.horizontalCenter
         id: bar
         width: resultsRect.width
         font.pixelSize: 24
         background: Rectangle {
-            color: "transparent"
+            color: "#fae1c3"//"transparent"
+            height: 2
+            y: bar.y - 26
         }
         spacing: 5
-        TabButton {
+
+        Repeater {
+            model: ["spell-check-solid", "list-ol-solid", "circle-info-solid"]
+
+            TabButton {
+                width: implicitWidth
+                function getButtonColor() {
+                    if (bar.currentIndex === TabBar.index) {
+                            return "#fae1c3"
+                        } else {
+                            return hovered ? "#b5a593" : "#847869"
+                        }
+                }
+                icon.source: "qrc:/images/" + modelData + ".svg"
+                icon.width: 24
+                icon.height: 24
+                icon.color: getButtonColor()
+                display: AbstractButton.TextBesideIcon
+                palette {
+                    buttonText: getButtonColor()
+                }
+                text: modelData
+                background: Rectangle {
+                    color: "transparent"
+                }
+            }
+        }
+
+        /*TabButton {
             //icon.name: "icon"
             width: implicitWidth
             icon.source: "qrc:/images/spell-check-solid.svg"
             icon.width: 24
             icon.height: 24
-            icon.color: hovered ?  "#fae1c3" : "#847869"
+            //icon.color: hovered ?  "#fae1c3" : "#847869"  //"#202020"
             display: AbstractButton.TextBesideIcon
-            palette {
-                buttonText: hovered ?  "#fae1c3" : "#847869"
+            function colo() {
+                if (bar.currentIndex === TabBar.index) {
+                        console.log("1")
+                        return "#fae1c3"
+                    } else {
+                        console.log("2")
+                        return hovered ? "#b5a593" : "#847869"
+                    }
             }
-            text: "Test"
+            icon.color: colo()
+
+            palette {
+                buttonText: {
+                    if (bar.currentIndex === TabBar.index) {
+                        console.log("1")
+                        return "#fae1c3"
+                    } else {
+                        console.log("2")
+                        return hovered ? "#b5a593" : "#847869"
+                    }
+                }
+                    //getButtonColor//hovered ?  "#fae1c3" : "#847869" //"#202020"
+            }
+            text: "test"
             background: Rectangle {
                 color: "transparent"
+                /*implicitWidth: 120
+                implicitHeight: 40
+                color:"#fae1c3"//"#847869"//button.down ? "#d6d6d6" : "#f6f6f6"
+                border.color: "#26282a"
+                border.width: 1
+                radius: 10
             }
         }
         TabButton {
@@ -207,16 +265,26 @@ Window {
             icon.source: "qrc:/images/list-ol-solid.svg"
             icon.width: 24
             icon.height: 24
-            icon.color: hovered ?  "#fae1c3" : "#847869"
+            icon.color: colo()// hovered ?  "#fae1c3" : "#847869"
             display: AbstractButton.TextBesideIcon
-            palette {
-                buttonText: hovered ?  "#fae1c3" : "#847869"
+            function colo() {
+                if (bar.currentIndex === TabBar.index) {
+                        console.log("3")
+                        return "#fae1c3"
+                    } else {
+                        console.log("4")
+                        return hovered ? "#b5a593" : "#847869"
+                    }
             }
-            text: "Results"
+            palette {
+                buttonText: colo() //hovered ?  "#fae1c3" : "#847869"
+            }
+            text: "results"
             background: Rectangle {
                 color: "transparent"
             }
-        }
+        }*/
+        /*
         TabButton {
             //icon.name: "icona"
             icon.source: "qrc:/images/circle-info-solid.svg"
@@ -228,11 +296,11 @@ Window {
             palette {
                 buttonText: hovered ?  "#fae1c3" : "#847869"
             }
-            text: "Info"
+            text: "info"
             background: Rectangle {
                 color: "transparent"
             }
-        }
+        }*/
         /*TabButton {
             id: but
             text: qsTr("Discover")
