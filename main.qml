@@ -37,40 +37,6 @@ Window {
         font.pixelSize: 35
     }
 
-    /*TypingTest {
-        id: testInterface
-        testDuration: 7
-        anchors.top: bar.bottom
-    }
-
-    Rectangle {
-        property alias wpmacc: wpmacc.text
-        id: resultsRect
-        anchors.top: testInterface.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        color: "#202020" //"#847869"
-        border.color: "#847869"
-        border.width: 2
-        width: 640
-        height: 300
-        //y: inputbox.height
-
-        Text {
-            id: wpmacc
-            text: root.wpmacc//"wpm: 107 accuracy: 80%"
-            font.pixelSize: 30
-            color: "#91170c"
-            anchors.top: testInterface.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-
-        TestResultsChartView {
-            id: resultsChart
-            anchors.fill: parent
-            anchors.top: wpmacc.bottom
-        }
-    }*/
-
     TabBar {
         //anchors.top: resultsRect.bottom
         y: title.y + kb.height + 20
@@ -129,52 +95,17 @@ Window {
         Item {
             id: testTab
             Layout.alignment: Qt.AlignHCenter
-            //anchors.horizontalCenter: parent.horizontalCenter
-            /*Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-                id: redrect
-                color: "red"
-                width: 100
-                height: 100
-            }*/
             TypingTest {
-                id: testInterface
-                anchors.horizontalCenter: parent.horizontalCenter
-                testDuration: 15
-                anchors.top: parent.top
-            }
-            TestResults {
-                id: resultsRect
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: testInterface.bottom
-            }
-            /*Rectangle {
-                property alias wpmacc: wpmacc.text
-                id: resultsRect
-                anchors.top: testInterface.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "#202020" //"#847869"
-                border.color: "#847869"
-                border.width: 2
-                width: 640
-                height: 300
-                //y: inputbox.height
-
-                Text {
-                    id: wpmacc
-                    text: root.wpmacc//"wpm: 107 accuracy: 80%"
-                    font.pixelSize: 30
-                    color: "#91170c"
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-
-                TestResultsChartView {
-                    id: resultsChart
-                    anchors.fill: parent
-                    anchors.top: wpmacc.bottom
-                }
-            }*/
+                 id: testInterface
+                 anchors.horizontalCenter: parent.horizontalCenter
+                 testDuration: 15
+                 anchors.top: parent.top
+             }
+             TestResults {
+                 id: resultsRect
+                 anchors.horizontalCenter: parent.horizontalCenter
+                 anchors.top: testInterface.bottom
+             }
         }
         Item {
             id: resultsTab

@@ -21,12 +21,6 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
-    //TestResultsChartView {
-    //    id: resultsChart
-    //    anchors.fill: parent
-    //    anchors.top: wpmacc.bottom
-    //}
-
     ChartView {
         title: "Test results"
         titleFont.pixelSize: 22
