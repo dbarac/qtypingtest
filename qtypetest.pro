@@ -5,7 +5,7 @@ SOURCES += \
         main.cpp \
         typingtest.cpp
 
-resources.files = main.qml 
+resources.files = main.qml TestResults.qml TypingTest.qml
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
     resources.qrc
@@ -24,3 +24,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     dataset.h \
     typingtest.h
+
+DISTFILES += \
+    TestResults.qml \
+    TypingTest.qml
