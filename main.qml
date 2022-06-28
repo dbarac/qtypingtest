@@ -11,6 +11,7 @@ Window {
     color: "#202020"
     id: root
 
+    //onActiveFocusItemChanged: print("activeFocusItem", activeFocusItem)
     property string wpmacc: ""
 
     Image {
@@ -44,6 +45,7 @@ Window {
         id: bar
         width: 640
         font.pixelSize: 24
+        focusPolicy: Qt.NoFocus
 
         // draw line below tab buttons
         background: Rectangle {
@@ -77,6 +79,7 @@ Window {
                 background: Rectangle {
                     color: "transparent"
                 }
+                focusPolicy: Qt.NoFocus
             }
         }
     }
@@ -105,6 +108,24 @@ Window {
                  id: resultsRect
                  anchors.horizontalCenter: parent.horizontalCenter
                  anchors.top: testInterface.bottom
+             }
+
+             // fade-in and fade-out, depending on current testActive value
+             property bool stateVisible: !testInterface.testActive
+             onStateVisibleChanged: {
+                 console.log("now chagned")
+             }
+
+             states: [
+                 State { when: testTab.stateVisible;
+                     PropertyChanges { target: resultsRect; opacity: 1.0 }
+                 },
+                 State { when: !testTab.stateVisible;
+                     PropertyChanges { target: resultsRect; opacity: 0.0 }
+                 }
+             ]
+             transitions: Transition {
+                 NumberAnimation { property: "opacity"; duration: 250}
              }
         }
         Item {
