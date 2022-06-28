@@ -34,7 +34,7 @@ Rectangle {
         Text {
             id: hint
             text: "Start typing to start the test"
-        anchors.top: parent.top
+            anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignHCenter
@@ -99,9 +99,14 @@ Rectangle {
         text: "restart"
         icon.source: "qrc:/images/arrow-rotate-right-solid.svg"
         icon.width: 24
-        icon.color: hovered ? "#b5a593" : "#847869"
+        icon.color: (hovered || activeFocus) ? "#b5a593" : "#847869"
         icon.height: 24
         display: AbstractButton.TextBesideIcon
+        Keys.onReturnPressed: (event) => {
+            clicked()
+            event.accepted = true
+            input.focus = true
+        }
 
         onClicked: {
             remainingTime.text = parent.testDuration.toString()
@@ -113,7 +118,7 @@ Rectangle {
             typingTest.updateGuiTestStr(true)
         }
         palette {
-            buttonText: hovered ? "#b5a593" : "#847869"
+            buttonText: (hovered || activeFocus) ? "#b5a593" : "#847869"
         }
 
         font.pixelSize: 25
@@ -125,7 +130,8 @@ Rectangle {
                //border.width: 1
                //radius: 10
         }
-        focusPolicy: Qt.NoFocus
+        //focusPolicy: Qt.NoFocus
+        activeFocusOnTab: true
     }
 
     TextInput {
@@ -136,6 +142,7 @@ Rectangle {
         font.pixelSize: 30
         color: "#fae1c3"
         focus: true
+        activeFocusOnTab: true
         cursorVisible: true
         onTextEdited: {
             if (!parent.testActive) {
@@ -154,5 +161,16 @@ Rectangle {
                 input.text = ""
             }
         }
+
+        /*MouseArea {
+            anchors.fill: parent
+            propagateComposedEvents: true
+
+            onClicked: (event) => {
+                console.log("clicked on TextInput");
+                input.focus = true
+                event.accepted = false;
+            }
+        }*/
     }
 }
