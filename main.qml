@@ -110,15 +110,20 @@ Window {
                 testDuration: 10
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: testInterface.bottom
+                opacity: 0
             }
-
 
             Timer {
                 id: timer
                 interval: 1000;
                 repeat: true
-                running: testInterface.testActive
+                running: testInterface.state === "testActive"
                 onTriggered: {
+                    // clear old results when a new test starts
+                    if (testInterface.remainingTime === testInterface.testDuration) {
+                        resultsRect.clearResults()
+                    }
+
                     // log current WPM for displaying in a chart after test ends
                     console.log(testInterface.testDuration)
                     //let remaining = parseInt(testInterface.remainingTime.text)
@@ -133,21 +138,21 @@ Window {
             }
 
             // fade-in and fade-out, depending on current testActive value
-            property bool stateVisible: !testInterface.testActive
-            onStateVisibleChanged: {
-                console.log("now chagned")
-            }
+            //property bool stateVisible: !testInterface.testActive
+            //onStateVisibleChanged: {
+            //    console.log("now chagned")
+            //}
 
             states: [
-                State { when: testTab.stateVisible;
+                State { when: testInterface.state === "testFinished";
                     PropertyChanges { target: resultsRect; opacity: 1.0 }
                 },
-                State { when: !testTab.stateVisible;
+                State { when: testInterface.state !== "testFinished";
                     PropertyChanges { target: resultsRect; opacity: 0.0 }
                 }
             ]
             transitions: Transition {
-                NumberAnimation { property: "opacity"; duration: 250 }
+                NumberAnimation { target: resultsRect; property: "opacity"; duration: 250 }
             }
         }
         Item {

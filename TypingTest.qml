@@ -8,15 +8,32 @@ Rectangle {
     anchors.top: bar.bottom
     anchors.topMargin: 20
     color: "#202020"
-    property bool testActive: false
+    //property bool testActive: false
+    state: "testReady"
     property int remainingTime: testDuration
-    property bool testFinished: false
+
+    //property bool stateVisible: !testRect.testActive
+    states: [
+        State { name: "testReady"
+            PropertyChanges { target: hintRect; opacity: 1.0 }
+        },
+        State { name: "testActive"
+            PropertyChanges { target: hintRect; opacity: 0.0 }
+        },
+        State { name: "testFinished"
+            PropertyChanges { target: hintRect; opacity: 0.0 }
+            PropertyChanges { target: restartBtn; focus: true }
+        }
+    ]
+    transitions: Transition {
+        NumberAnimation { target: hintRect; property: "opacity"; duration: 250}
+    }
 
     Text {
         id: remainingTimeStr
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        color: testRect.testActive ?  "#c58940" : "#847869"//"#7ebab5"
+        color: testRect.state === "testActive" ?  "#c58940" : "#847869"//"#7ebab5"
         horizontalAlignment: Text.AlignHCenter
         text: parent.remainingTime.toString()
         font.pixelSize: 60
@@ -44,7 +61,7 @@ Rectangle {
             color: "#202020"
         }
 
-        // fade-in and fade-out, depending on current testActive value
+        /*// fade-in and fade-out, depending on current testActive value
         property bool stateVisible: !testRect.testActive
         states: [
             State { when: hintRect.stateVisible;
@@ -56,7 +73,7 @@ Rectangle {
         ]
         transitions: Transition {
             NumberAnimation { property: "opacity"; duration: 250}
-        }
+        }*/
     }
 
     function updateRemainingTime() {
@@ -67,8 +84,10 @@ Rectangle {
             remainingTime = testDuration
             //timer.stop()
             console.log("before")
-            testRect.testActive = false
-            testRect.testFinished = true
+            //testRect.testActive = false
+            //testRect.testFinished = true
+            testRect.state = "testFinished"
+            input.clear()
             console.log("after")
             root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
                           " Accuracy: " + typingTest.calculateAccuracy() + "%"
@@ -122,16 +141,22 @@ Rectangle {
         icon.height: 24
         display: AbstractButton.TextBesideIcon
         Keys.onReturnPressed: (event) => {
-            clicked()
+            console.log("returnpressed")
             event.accepted = true
-            input.focus = true
+            clicked()
         }
-
+        Keys.onSpacePressed: (event) => {
+            // empty handler, prevents onClicked
+            // from being called when space is pressed
+        }
         onClicked: {
+            console.log("clicked")
             remainingTime.text = parent.testDuration.toString()
-            testRect.testActive = false
+            //testRect.testActive = false
+            testRect.state = "testReady"
             //timer.stop()
             input.text = ""
+            input.focus = true
             root.wpmacc = ""
             typingTest.sampleWordDataset()
             typingTest.updateGuiTestStr(true)
@@ -164,15 +189,17 @@ Rectangle {
         activeFocusOnTab: true
         cursorVisible: true
         onTextEdited: {
-            if (!parent.testActive) {
+            if (parent.state === "testReady") {
                 // start the test automatically
                 // when the user starts typing
-                parent.testActive = true;
+                parent.state = "testActive"
                 //timer.start()
                 root.wpmacc = ""
             }
-            // track progress and update test words
-            typingTest.processKbInput(input.text)
+            if (parent.state === "testActive") {
+                // track progress and update test prompt
+                typingTest.processKbInput(input.text)
+            }
 
             // clear input field if the user finished typing the current word
             let pressedSpace = input.text.length > 0 && input.text.slice(-1) === " "

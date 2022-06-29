@@ -42,6 +42,11 @@ Rectangle {
         series.append(time, wpm)
     }
 
+    function clearResults() {
+        // remove all points
+        series.removePoints(0, series.count)
+    }
+
     ChartView {
         id: resultsChart
         title: "Test results"
@@ -65,7 +70,7 @@ Rectangle {
                 labelsFont.pixelSize: 14
                 labelsFont.bold: true
                 gridLineColor: "#847869"
-                titleText:"<font color='#847869'>Time (s)</font>"
+                titleText: "<font color='#847869'>Time (s)</font>"
                 min: 1
                 max: testDuration
                 //tickInterval: testDuration
