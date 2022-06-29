@@ -3,6 +3,7 @@ import QtCharts
 
 Rectangle {
     property alias wpmacc: wpmacc.text
+    required property int testDuration
     //id: resultsRect
     //anchors.top: testInterface.bottom
     color: "#202020" //"#847869"
@@ -21,7 +22,28 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
+     /*Timer {
+        id: charttimer
+        interval: 1000;
+        repeat: true
+        running: true
+        property int val: 0
+        onTriggered: {
+            val++
+            series.append(val, val * 1.5)
+            console.log(val * 2)
+            console.log(series.at(val-1))
+            //resultsChart.axisX().min = 0
+            series.axisX.max = 50
+        }
+    }*/
+
+    function appendToWPMSeries(time, wpm) {
+        series.append(time, wpm)
+    }
+
     ChartView {
+        id: resultsChart
         title: "Test results"
         titleFont.pixelSize: 22
         titleFont.bold: true
@@ -30,7 +52,7 @@ Rectangle {
         anchors.fill: parent
         legend.visible: false
         backgroundColor: "transparent"
-        theme: ChartView.ChartThemeBrownSand
+        //theme: ChartView.ChartThemeBrownSand bg is white when this is uncommented?
 
         LineSeries {
             id: series
@@ -44,6 +66,11 @@ Rectangle {
                 labelsFont.bold: true
                 gridLineColor: "#847869"
                 titleText:"<font color='#847869'>Time (s)</font>"
+                min: 1
+                max: testDuration
+                //tickInterval: testDuration
+                tickCount: testDuration
+                labelFormat: "%d"
             }
             axisY: ValueAxis {
                 color: "#847869"
@@ -64,7 +91,7 @@ Rectangle {
                 }
                 titleText:"<font color='#847869'>Current WPM</font>"
             }
-            XYPoint { x: 1; y: 70 }
+            /*XYPoint { x: 1; y: 70 }
             XYPoint { x: 2; y: 72 }
             XYPoint { x: 3; y: 68 }
             XYPoint { x: 4; y: 75 }
@@ -78,7 +105,7 @@ Rectangle {
             XYPoint { x: 12; y: 78 }
             XYPoint { x: 13; y: 95 }
             XYPoint { x: 14; y: 105 }
-            XYPoint { x: 15; y: 107 }
+            XYPoint { x: 15; y: 107 }*/
         }
     }
 }

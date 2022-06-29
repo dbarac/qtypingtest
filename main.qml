@@ -92,41 +92,63 @@ Window {
         //anchors.top: bar.bottom
         y: bar.y + bar.height + 40
         //anchors.horizontalCenter: parent.horizontalCenter
-        Layout.alignment: Qt.AlignHCenter
+        //Layout.alignment: Qt.AlignHCenter
         //width: 800
 
         Item {
             id: testTab
             Layout.alignment: Qt.AlignHCenter
+            //anchors.horizontalCenter: parent.horizontalCenter
             TypingTest {
-                 id: testInterface
-                 anchors.horizontalCenter: parent.horizontalCenter
-                 testDuration: 15
-                 anchors.top: parent.top
-             }
-             TestResults {
-                 id: resultsRect
-                 anchors.horizontalCenter: parent.horizontalCenter
-                 anchors.top: testInterface.bottom
-             }
+                id: testInterface
+                anchors.horizontalCenter: parent.horizontalCenter
+                testDuration: 10
+                anchors.top: parent.top
+            }
+            TestResults {
+                id: resultsRect
+                testDuration: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: testInterface.bottom
+            }
 
-             // fade-in and fade-out, depending on current testActive value
-             property bool stateVisible: !testInterface.testActive
-             onStateVisibleChanged: {
-                 console.log("now chagned")
-             }
 
-             states: [
-                 State { when: testTab.stateVisible;
-                     PropertyChanges { target: resultsRect; opacity: 1.0 }
-                 },
-                 State { when: !testTab.stateVisible;
-                     PropertyChanges { target: resultsRect; opacity: 0.0 }
-                 }
-             ]
-             transitions: Transition {
-                 NumberAnimation { property: "opacity"; duration: 250}
-             }
+            Timer {
+                id: timer
+                interval: 1000;
+                repeat: true
+                running: testInterface.testActive
+                onTriggered: {
+                    // log current WPM for displaying in a chart after test ends
+                    console.log(testInterface.testDuration)
+                    //let remaining = parseInt(testInterface.remainingTime.text)
+                    let currentTime = testInterface.testDuration - testInterface.remainingTime + 1
+                    console.log(currentTime)
+                    let wpm = typingTest.calculateWPM(currentTime)
+                    console.log("entry ", currentTime, wpm)
+                    resultsRect.appendToWPMSeries(currentTime, wpm)
+
+                    testInterface.updateRemainingTime()
+                }
+            }
+
+            // fade-in and fade-out, depending on current testActive value
+            property bool stateVisible: !testInterface.testActive
+            onStateVisibleChanged: {
+                console.log("now chagned")
+            }
+
+            states: [
+                State { when: testTab.stateVisible;
+                    PropertyChanges { target: resultsRect; opacity: 1.0 }
+                },
+                State { when: !testTab.stateVisible;
+                    PropertyChanges { target: resultsRect; opacity: 0.0 }
+                }
+            ]
+            transitions: Transition {
+                NumberAnimation { property: "opacity"; duration: 250 }
+            }
         }
         Item {
             id: resultsTab

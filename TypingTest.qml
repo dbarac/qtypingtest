@@ -9,21 +9,23 @@ Rectangle {
     anchors.topMargin: 20
     color: "#202020"
     property bool testActive: false
+    property int remainingTime: testDuration
+    property bool testFinished: false
 
     Text {
-        id: remainingTime
+        id: remainingTimeStr
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         color: testRect.testActive ?  "#c58940" : "#847869"//"#7ebab5"
         horizontalAlignment: Text.AlignHCenter
-        text: parent.testDuration.toString()
+        text: parent.remainingTime.toString()
         font.pixelSize: 60
         wrapMode: Text.WordWrap
     }
 
     Rectangle {
         id: hintRect
-        anchors.top: remainingTime.bottom
+        anchors.top: remainingTimeStr.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: 264
         height: 30
@@ -57,7 +59,24 @@ Rectangle {
         }
     }
 
-    Timer {
+    function updateRemainingTime() {
+        //let remaining = parseInt(remainingTime.text)
+        if (remainingTime > 1) {
+            remainingTime--
+        } else {
+            remainingTime = testDuration
+            //timer.stop()
+            console.log("before")
+            testRect.testActive = false
+            testRect.testFinished = true
+            console.log("after")
+            root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
+                          " Accuracy: " + typingTest.calculateAccuracy() + "%"
+        }
+        //remainingTime.text = remaining.toString()
+    }
+
+   /* Timer {
         id: timer
         interval: 1000;
         repeat: true
@@ -75,7 +94,7 @@ Rectangle {
             }
             remainingTime.text = remaining.toString()
         }
-    }
+    }*/
 
     // test prompt - words which the user should type
     Text {
@@ -111,7 +130,7 @@ Rectangle {
         onClicked: {
             remainingTime.text = parent.testDuration.toString()
             testRect.testActive = false
-            timer.stop()
+            //timer.stop()
             input.text = ""
             root.wpmacc = ""
             typingTest.sampleWordDataset()
@@ -149,7 +168,7 @@ Rectangle {
                 // start the test automatically
                 // when the user starts typing
                 parent.testActive = true;
-                timer.start()
+                //timer.start()
                 root.wpmacc = ""
             }
             // track progress and update test words
