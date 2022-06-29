@@ -145,7 +145,8 @@ void TypingTest::updateGuiTestStr(bool initialize=false) {
  */
 unsigned TypingTest::calculateWPM(unsigned testTimeSec)
 {
-    return m_totalAcceptedChars / 5 * 60 / testTimeSec;
+    float wpm = static_cast<float>(m_totalAcceptedChars) / 5 * 60. / testTimeSec;
+    return static_cast<unsigned>(wpm);
 }
 
 unsigned TypingTest::calculateAccuracy()
