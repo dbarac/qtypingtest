@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtCharts
 
+import Qt.labs.qmlmodels 1.0
+
 Window {
     width: 1000
     height: 800
@@ -102,12 +104,12 @@ Window {
             TypingTest {
                 id: testInterface
                 anchors.horizontalCenter: parent.horizontalCenter
-                testDuration: 10
+                testDuration: 5
                 anchors.top: parent.top
             }
             TestResults {
                 id: resultsRect
-                testDuration: 10
+                testDuration: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: testInterface.bottom
                 opacity: 0
@@ -124,14 +126,24 @@ Window {
                         resultsRect.clearResults()
                     }
 
+                    testInterface.updateRemainingTime()
                     // log current WPM for displaying in a chart after test ends
-                    let currentTime = testInterface.testDuration - testInterface.remainingTime + 1
-                    console.log(currentTime)
+                    let currentTime = testInterface.testDuration - testInterface.remainingTime
                     let wpm = typingTest.calculateWPM(currentTime)
-                    console.log("entry ", currentTime, wpm)
+
+                    // save results when test is finished
+                    if (testInterface.remainingTime === 0) {
+                        let acc = typingTest.calculateAccuracy();
+                        testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
+                    }
+
+                    //console.log(currentTime)
+                    //console.log("entry ", currentTime, wpm)
                     resultsRect.appendToWPMSeries(currentTime, wpm)
 
-                    testInterface.updateRemainingTime()
+                    if (testInterface.remainingTime == 0) {
+                        testInterface.finishTest()
+                    }
                 }
             }
 
@@ -164,7 +176,7 @@ Window {
                 //clip: true
                 boundsMovement: Flickable.StopAtBounds
 
-                model: ListModel {
+                /*model: ListModel {
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Mercury"; surfaceColor: "gray" }
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Venus"; surfaceColor: "yellow" }
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Earth"; surfaceColor: "blue" }
@@ -173,16 +185,19 @@ Window {
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Saturn"; surfaceColor: "yellow" }
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Uranus"; surfaceColor: "lightBlue" }
                     ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Neptune"; surfaceColor: "lightBlue" }
-                }
+                }*/
+                model: testResultsModel
                 delegate: Rectangle {
                     id: blueBox
 
-                    required property string name
-                    required property string wpm
-                    required property string duration
-                    required property string acc
+                    //required property string name
+                    //required property string wpm
+                    //required property string duration
+                    //required property string acc
                     required property int index
-                    required property color surfaceColor
+                    //required property string data
+                    required property var model
+                    //required property color surfaceColor
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 600
@@ -197,10 +212,11 @@ Window {
                         color: "#c58940"
                         font.pixelSize: 20
                         horizontalAlignment: Text.AlignLeft
-                        text: index + " <font color='#847869'>duration: </font> " + duration
-                                    + " <font color='#847869'>wpm: </font> " + wpm
-                                    + " <font color='#847869'>acc: </font> " + acc
-                                    + " <font color='#847869'>name: </font> " + name
+                        //text: index + " <font color='#847869'>duration: </font> " + duration
+                        //            + " <font color='#847869'>wpm: </font> " + wpm
+                        //            + " <font color='#847869'>acc: </font> " + acc
+                        //            + " <font color='#847869'>name: </font> " + name
+                        text: index.toString() + " " + model.display
                     }
                     /*Rectangle {
                         anchors.left: parent.left
@@ -224,13 +240,96 @@ Window {
         }
         Item {
             id: infoTab
-            Text {
-                anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "#c58940"
-                font.pixelSize: 60
-                text: "info"
+            //Text {
+            //    id: info
+            //    anchors.top: parent.top
+            //    anchors.horizontalCenter: parent.horizontalCenter
+            //    color: "#c58940"
+            //    font.pixelSize: 60
+            //    text: "info"
+            //}
+
+            TableModel {
+                id: mod
+                TableModelColumn { display: "name" }
+                TableModelColumn { display: "color" }
+
+                rows: [
+                    {
+                        "name": "cat",
+                        "color": "black"
+                    },
+                    {
+                        "name": "dog",
+                        "color": "brown"
+                    },
+                    {
+                        "name": "bird",
+                        "color": "white"
+                    },
+                    {
+                        "name": "dog",
+                        "color": "brown"
+                    },
+                    {
+                        "name": "bird",
+                        "color": "white"
+                    }
+                ]
             }
+            TableView {
+                id: table
+                //anchors.fill: parent
+                width: 500
+                height: 200
+                anchors.top: horizontalHeader.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                //topMargin: horizontalHeader.implicitHeight
+                columnSpacing: 1
+                rowSpacing: 1
+                clip: true
+                boundsMovement: Flickable.StopAtBounds
+                model: mod
+
+                delegate: Rectangle {
+                    //required property int index
+                    color: (row % 2 === 0 ? "#2b2a2a": "transparent") // ListView.isCurrentItem ? "red" :
+                    implicitWidth: 140
+                    implicitHeight: 50
+                    //border.width: 1
+
+                    Text {
+                        text: display
+                        color: "#fae1c3"
+                        font.pixelSize: 18
+                        anchors.centerIn: parent
+                    }
+                }
+                ScrollBar.vertical: ScrollBar {
+                    active: true
+                }
+            }
+            HorizontalHeaderView {
+                boundsMovement: Flickable.StopAtBounds
+                id: horizontalHeader
+                model: ["<u>wpm</u>", "<u>accuracy</u>"]
+                textRole: "display"
+                syncView: table
+                anchors.left: table.left
+                anchors.top: parent.top
+                delegate: Rectangle {
+                    implicitWidth: 140
+                    implicitHeight: 50
+                    color: "transparent"
+                    Text {
+                        font.pixelSize: 20
+                        color: "#847869"
+                        text: modelData
+                        anchors.centerIn: parent
+                    }
+                }
+            }
+
         }
     }
 }
