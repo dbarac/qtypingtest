@@ -125,8 +125,6 @@ Window {
                     }
 
                     // log current WPM for displaying in a chart after test ends
-                    console.log(testInterface.testDuration)
-                    //let remaining = parseInt(testInterface.remainingTime.text)
                     let currentTime = testInterface.testDuration - testInterface.remainingTime + 1
                     console.log(currentTime)
                     let wpm = typingTest.calculateWPM(currentTime)
@@ -137,12 +135,7 @@ Window {
                 }
             }
 
-            // fade-in and fade-out, depending on current testActive value
-            //property bool stateVisible: !testInterface.testActive
-            //onStateVisibleChanged: {
-            //    console.log("now chagned")
-            //}
-
+            // fade-in/out for test results
             states: [
                 State { when: testInterface.state === "testFinished";
                     PropertyChanges { target: resultsRect; opacity: 1.0 }
@@ -157,13 +150,77 @@ Window {
         }
         Item {
             id: resultsTab
-            Text {
+            /*Text {
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#c58940"
                 font.pixelSize: 60
                 text: "results"
+            }*/
+            ListView {
+                width: 600; height: 200
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                //clip: true
+                boundsMovement: Flickable.StopAtBounds
+
+                model: ListModel {
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Mercury"; surfaceColor: "gray" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Venus"; surfaceColor: "yellow" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Earth"; surfaceColor: "blue" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Mars"; surfaceColor: "orange" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Jupiter"; surfaceColor: "orange" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Saturn"; surfaceColor: "yellow" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Uranus"; surfaceColor: "lightBlue" }
+                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Neptune"; surfaceColor: "lightBlue" }
+                }
+                delegate: Rectangle {
+                    id: blueBox
+
+                    required property string name
+                    required property string wpm
+                    required property string duration
+                    required property string acc
+                    required property int index
+                    required property color surfaceColor
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 600
+                    height: 32
+                    color: (index % 2 === 0 ? "#212020" : "#2b2a2a") // ListView.isCurrentItem ? "red" :
+
+                    radius: 3
+                    Text {
+                        anchors.top: parent.top
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width
+                        color: "#c58940"
+                        font.pixelSize: 20
+                        horizontalAlignment: Text.AlignLeft
+                        text: index + " <font color='#847869'>duration: </font> " + duration
+                                    + " <font color='#847869'>wpm: </font> " + wpm
+                                    + " <font color='#847869'>acc: </font> " + acc
+                                    + " <font color='#847869'>name: </font> " + name
+                    }
+                    /*Rectangle {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 4
+
+                        width: 16
+                        height: 16
+
+                        radius: 8
+
+                        color: blueBox.surfaceColor
+                    }*/
+                }
+                ScrollBar.vertical: ScrollBar {
+                    active: true
+                }
             }
+
+
         }
         Item {
             id: infoTab
