@@ -78,10 +78,8 @@ Rectangle {
 
     function updateRemainingTime() {
         //let remaining = parseInt(remainingTime.text)
-        if (remainingTime > 1) {
-            remainingTime--
-        } else {
-            remainingTime = testDuration
+        remainingTime--
+        if (remainingTime == 0) {
             //timer.stop()
             console.log("before")
             //testRect.testActive = false
@@ -95,6 +93,12 @@ Rectangle {
         //remainingTime.text = remaining.toString()
     }
 
+    function finishTest() {
+        testRect.state = "testFinished"
+        input.clear()
+        root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
+                      " Accuracy: " + typingTest.calculateAccuracy() + "%"
+    }
    /* Timer {
         id: timer
         interval: 1000;
@@ -141,7 +145,6 @@ Rectangle {
         icon.height: 24
         display: AbstractButton.TextBesideIcon
         Keys.onReturnPressed: (event) => {
-            console.log("returnpressed")
             event.accepted = true
             clicked()
         }
@@ -150,11 +153,8 @@ Rectangle {
             // from being called when space is pressed
         }
         onClicked: {
-            console.log("clicked")
-            remainingTime.text = parent.testDuration.toString()
-            //testRect.testActive = false
+            remainingTime = parent.testDuration
             testRect.state = "testReady"
-            //timer.stop()
             input.text = ""
             input.focus = true
             root.wpmacc = ""
