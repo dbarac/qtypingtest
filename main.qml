@@ -130,20 +130,21 @@ Window {
                     // log current WPM for displaying in a chart after test ends
                     let currentTime = testInterface.testDuration - testInterface.remainingTime
                     let wpm = typingTest.calculateWPM(currentTime)
+                    resultsRect.appendToWPMSeries(currentTime, wpm)
 
                     // save results when test is finished
                     if (testInterface.remainingTime === 0) {
                         let acc = typingTest.calculateAccuracy();
                         testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
+                        testInterface.finishTest()
                     }
 
                     //console.log(currentTime)
                     //console.log("entry ", currentTime, wpm)
-                    resultsRect.appendToWPMSeries(currentTime, wpm)
 
-                    if (testInterface.remainingTime == 0) {
-                        testInterface.finishTest()
-                    }
+                    //if (testInterface.remainingTime == 0) {
+                    //    testInterface.finishTest()
+                    //}
                 }
             }
 
@@ -307,6 +308,7 @@ Window {
                 }
                 ScrollBar.vertical: ScrollBar {
                     active: true
+                    policy: ScrollBar.AlwaysOn
                 }
             }
             HorizontalHeaderView {
