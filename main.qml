@@ -281,47 +281,49 @@ Window {
             TableView {
                 id: table
                 //anchors.fill: parent
-                width: 500
-                height: 200
+                width: 600
+                height: 180
                 anchors.top: horizontalHeader.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 //topMargin: horizontalHeader.implicitHeight
-                columnSpacing: 1
+                columnSpacing: 2
                 rowSpacing: 1
                 clip: true
                 boundsMovement: Flickable.StopAtBounds
-                model: mod
+                model: testResultsModel//mod
 
                 delegate: Rectangle {
                     //required property int index
                     color: (row % 2 === 0 ? "#2b2a2a": "transparent") // ListView.isCurrentItem ? "red" :
-                    implicitWidth: 140
-                    implicitHeight: 50
+                    implicitWidth: column !== 3 ? 110 : 180
+                    implicitHeight: 40
                     //border.width: 1
 
                     Text {
                         text: display
                         color: "#fae1c3"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         anchors.centerIn: parent
                     }
                 }
                 ScrollBar.vertical: ScrollBar {
                     active: true
-                    policy: ScrollBar.AlwaysOn
+                    //policy: ScrollBar.AlwaysOn
                 }
             }
             HorizontalHeaderView {
                 boundsMovement: Flickable.StopAtBounds
                 id: horizontalHeader
-                model: ["<u>wpm</u>", "<u>accuracy</u>"]
+                model: [
+                    "<u>wpm</u>", "<u>accuracy</u>", "<u>duration</u>", "<u>date/time</u>"
+                ]
                 textRole: "display"
                 syncView: table
                 anchors.left: table.left
                 anchors.top: parent.top
                 delegate: Rectangle {
-                    implicitWidth: 140
-                    implicitHeight: 50
+                    implicitWidth: modelData === "<u>date/time</u>" ? 110 : 180
+                    implicitHeight: 40
                     color: "transparent"
                     Text {
                         font.pixelSize: 20

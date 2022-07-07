@@ -27,12 +27,9 @@ void TypingTest::sampleWordDataset()
 bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
 {
     if (input.size() > currentWord.size()) {
-        return input.endsWith(" ") ? true : false;
+        return input.endsWith(" ");
     }
-    if (input.back() != currentWord[input.size()-1]) {
-        return false;
-    }
-    return true;
+    return input.back() == currentWord[input.size()-1];
 }
 
 /*
@@ -46,7 +43,7 @@ void TypingTest::processKbInput(QString& input)
     QString wordColor;
     bool resetTestStr = false;
 
-    /* check if new character or backspace  */
+    /* Update character counts only if keypress was not backspace. */
     if (input.size() > m_prevInputLen) {
         if (newCharIsCorrect(currentTestWord, input)) {
             m_correctChars++;
