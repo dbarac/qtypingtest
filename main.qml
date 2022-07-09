@@ -136,6 +136,7 @@ Window {
                     if (testInterface.remainingTime === 0) {
                         let acc = typingTest.calculateAccuracy();
                         testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
+                        testResultsModel.saveToFile("results.csv")
                         testInterface.finishTest()
                     }
 
@@ -170,114 +171,6 @@ Window {
                 font.pixelSize: 60
                 text: "results"
             }*/
-            ListView {
-                width: 600; height: 200
-                anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
-                //clip: true
-                boundsMovement: Flickable.StopAtBounds
-
-                /*model: ListModel {
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Mercury"; surfaceColor: "gray" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Venus"; surfaceColor: "yellow" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Earth"; surfaceColor: "blue" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Mars"; surfaceColor: "orange" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Jupiter"; surfaceColor: "orange" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Saturn"; surfaceColor: "yellow" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Uranus"; surfaceColor: "lightBlue" }
-                    ListElement { duration: "15"; wpm: "100"; acc: "90"; name: "Neptune"; surfaceColor: "lightBlue" }
-                }*/
-                model: testResultsModel
-                delegate: Rectangle {
-                    id: blueBox
-
-                    //required property string name
-                    //required property string wpm
-                    //required property string duration
-                    //required property string acc
-                    required property int index
-                    //required property string data
-                    required property var model
-                    //required property color surfaceColor
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: 600
-                    height: 32
-                    color: (index % 2 === 0 ? "#212020" : "#2b2a2a") // ListView.isCurrentItem ? "red" :
-
-                    radius: 3
-                    Text {
-                        anchors.top: parent.top
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: parent.width
-                        color: "#c58940"
-                        font.pixelSize: 20
-                        horizontalAlignment: Text.AlignLeft
-                        //text: index + " <font color='#847869'>duration: </font> " + duration
-                        //            + " <font color='#847869'>wpm: </font> " + wpm
-                        //            + " <font color='#847869'>acc: </font> " + acc
-                        //            + " <font color='#847869'>name: </font> " + name
-                        text: index.toString() + " " + model.display
-                    }
-                    /*Rectangle {
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: 4
-
-                        width: 16
-                        height: 16
-
-                        radius: 8
-
-                        color: blueBox.surfaceColor
-                    }*/
-                }
-                ScrollBar.vertical: ScrollBar {
-                    active: true
-                }
-            }
-
-
-        }
-        Item {
-            id: infoTab
-            //Text {
-            //    id: info
-            //    anchors.top: parent.top
-            //    anchors.horizontalCenter: parent.horizontalCenter
-            //    color: "#c58940"
-            //    font.pixelSize: 60
-            //    text: "info"
-            //}
-
-            TableModel {
-                id: mod
-                TableModelColumn { display: "name" }
-                TableModelColumn { display: "color" }
-
-                rows: [
-                    {
-                        "name": "cat",
-                        "color": "black"
-                    },
-                    {
-                        "name": "dog",
-                        "color": "brown"
-                    },
-                    {
-                        "name": "bird",
-                        "color": "white"
-                    },
-                    {
-                        "name": "dog",
-                        "color": "brown"
-                    },
-                    {
-                        "name": "bird",
-                        "color": "white"
-                    }
-                ]
-            }
             TableView {
                 id: table
                 //anchors.fill: parent
@@ -333,6 +226,47 @@ Window {
                     }
                 }
             }
+
+        }
+        Item {
+            id: infoTab
+            Text {
+                id: info
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "#c58940"
+                font.pixelSize: 60
+                text: "info"
+            }
+
+            //TableModel {
+            //    id: mod
+            //    TableModelColumn { display: "name" }
+            //    TableModelColumn { display: "color" }
+
+            //    rows: [
+            //        {
+            //            "name": "cat",
+            //            "color": "black"
+            //        },
+            //        {
+            //            "name": "dog",
+            //            "color": "brown"
+            //        },
+            //        {
+            //            "name": "bird",
+            //            "color": "white"
+            //        },
+            //        {
+            //            "name": "dog",
+            //            "color": "brown"
+            //        },
+            //        {
+            //            "name": "bird",
+            //            "color": "white"
+            //        }
+            //    ]
+            //}
 
         }
     }
