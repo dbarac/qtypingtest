@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Rectangle {
     id: testRect
-    required property int testDuration
     width: parent.width; height: 330
     color: "#202020"
     state: "testReady"
+    property int testDuration: 15
+    property int nextTestDuration: 15
     property int remainingTime: testDuration
 
     states: [
@@ -25,9 +27,57 @@ Rectangle {
         NumberAnimation { target: hintRect; property: "opacity"; duration: 250}
     }
 
+    RowLayout {
+        id: durationRadioButtons
+        anchors.top: parent.top
+        anchors.left: testText.left
+        Text {
+            text: "duration:"
+            font.pixelSize: 22
+            color: "#847869"
+        }
+
+        Repeater {
+            model: ["5", "15", "30", "60"]
+            delegate: RadioButton {
+                id: durationButton
+                focusPolicy: Qt.NoFocus
+                checked: modelData === "15"
+                text: modelData
+                spacing: 5
+
+                onClicked: {
+                    testRect.nextTestDuration = parseInt(text)
+                    if (testRect.state === "testReady") {
+                        testRect.testDuration = testRect.nextTestDuration
+                        testRect.remainingTime = testRect.testDuration
+                    }
+                }
+
+                contentItem: Text {
+                    function getButtonColor() {
+                        if (checked) {
+                            return "#c58940"
+                        } else {
+                            return hovered ? "#b5a593" : "#847869"
+                        }
+                    }
+                    text: durationButton.text
+                    font.pixelSize: 22
+                    opacity: enabled ? 1.0 : 0.3
+                    color: getButtonColor()
+                    verticalAlignment: Text.AlignVCenter
+                }
+                indicator: Rectangle {
+                    // empty
+                }
+            }
+        }
+    }
+
     Text {
         id: remainingTimeStr
-        anchors.top: parent.top
+        anchors.top: durationRadioButtons.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         color: testRect.state === "testActive" ?  "#c58940" : "#847869"
         horizontalAlignment: Text.AlignHCenter
@@ -99,6 +149,7 @@ Rectangle {
             // from being called when space is pressed
         }
         onClicked: {
+            parent.testDuration = parent.nextTestDuration
             remainingTime = parent.testDuration
             testRect.state = "testReady"
             input.text = ""

@@ -6,7 +6,6 @@ Item {
     TestInterface {
         id: testInterface
         anchors.horizontalCenter: parent.horizontalCenter
-        testDuration: 5
         anchors.top: parent.top
     }
 

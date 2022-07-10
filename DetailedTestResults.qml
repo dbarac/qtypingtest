@@ -52,9 +52,9 @@ Rectangle {
                 gridLineColor: "#847869"
                 titleText: "<font color='#847869'>Time (s)</font>"
                 min: 1
-                max: testDuration
+                max: testDuration//wpmSeries.count
                 //tickInterval: testDuration
-                tickCount: testDuration
+                tickCount: testDuration //wpmSeries.count//
                 labelFormat: "%d"
             }
             axisY: ValueAxis {
