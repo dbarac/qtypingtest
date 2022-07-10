@@ -8,11 +8,9 @@ Rectangle {
     anchors.top: bar.bottom
     anchors.topMargin: 20
     color: "#202020"
-    //property bool testActive: false
     state: "testReady"
     property int remainingTime: testDuration
 
-    //property bool stateVisible: !testRect.testActive
     states: [
         State { name: "testReady"
             PropertyChanges { target: hintRect; opacity: 1.0 }
@@ -33,7 +31,7 @@ Rectangle {
         id: remainingTimeStr
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        color: testRect.state === "testActive" ?  "#c58940" : "#847869"//"#7ebab5"
+        color: testRect.state === "testActive" ?  "#c58940" : "#847869"
         horizontalAlignment: Text.AlignHCenter
         text: parent.remainingTime.toString()
         font.pixelSize: 60
@@ -48,8 +46,6 @@ Rectangle {
         height: 30
         radius: 5
         color: "#c58940"
-        //visible: !testRect.testActive
-        //opacity: testRect.testActive ? 0.0 : 1.0
         Text {
             id: hint
             text: "Start typing to start the test"
@@ -60,37 +56,16 @@ Rectangle {
             font.pixelSize: 20
             color: "#202020"
         }
-
-        /*// fade-in and fade-out, depending on current testActive value
-        property bool stateVisible: !testRect.testActive
-        states: [
-            State { when: hintRect.stateVisible;
-                PropertyChanges { target: hintRect; opacity: 1.0 }
-            },
-            State { when: !hintRect.stateVisible;
-                PropertyChanges { target: hintRect; opacity: 0.0 }
-            }
-        ]
-        transitions: Transition {
-            NumberAnimation { property: "opacity"; duration: 250}
-        }*/
     }
 
     function updateRemainingTime() {
-        //let remaining = parseInt(remainingTime.text)
         remainingTime--
         if (remainingTime == 0) {
-            //timer.stop()
-            console.log("before")
-            //testRect.testActive = false
-            //testRect.testFinished = true
             testRect.state = "testFinished"
             input.clear()
-            console.log("after")
             root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
                           " Accuracy: " + typingTest.calculateAccuracy() + "%"
         }
-        //remainingTime.text = remaining.toString()
     }
 
     function finishTest() {
@@ -99,25 +74,6 @@ Rectangle {
         root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
                       " Accuracy: " + typingTest.calculateAccuracy() + "%"
     }
-   /* Timer {
-        id: timer
-        interval: 1000;
-        repeat: true
-        running: false
-        onTriggered: function updateRemainingTime() {
-            let remaining = parseInt(remainingTime.text)
-            if (remaining > 1) {
-                remaining--
-            } else {
-                remaining = parent.testDuration
-                timer.stop()
-                testRect.testActive = false
-                root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
-                              " Accuracy: " + typingTest.calculateAccuracy() + "%"
-            }
-            remainingTime.text = remaining.toString()
-        }
-    }*/
 
     // test prompt - words which the user should type
     Text {
@@ -158,8 +114,6 @@ Rectangle {
             input.text = ""
             input.focus = true
             root.wpmacc = ""
-            //typingTest.sampleWordDataset()
-            //typingTest.updateTestPrompt(true)
             typingTest.reset()
         }
         palette {
@@ -170,10 +124,7 @@ Rectangle {
         background: Rectangle {
                implicitWidth: 130
                implicitHeight: 40
-               color: "transparent"//"#c58940"//"#847869"//button.down ? "#d6d6d6" : "#f6f6f6"
-               //border.color: "#26282a"
-               //border.width: 1
-               //radius: 10
+               color: "transparent"
         }
         //focusPolicy: Qt.NoFocus
         activeFocusOnTab: true
