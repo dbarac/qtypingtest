@@ -2,28 +2,30 @@ import QtQuick 2.0
 import QtCharts
 
 Rectangle {
-    property alias wpmacc: wpmacc.text
     required property int testDuration
     color: "#202020" //"#847869"
     width: 640
     height: 300
+    property int wpm: 0
+    property int accuracy: 0
 
     Text {
-        id: wpmacc
-        text: root.wpmacc//"wpm: 107 accuracy: 80%"
+        id: finalResults
+        text: "wpm: <font color='#91170c'>" + wpm + "</font> " +
+              "accuracy: <font color='#91170c'>" + accuracy + "</font>"
         font.pixelSize: 30
-        color: "#91170c"
+        color: "#847869"
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
     function appendToWPMSeries(time, wpm) {
-        series.append(time, wpm)
+        wpmSeries.append(time, wpm)
     }
 
-    function clearResults() {
+    function clearWPMSeries() {
         // remove all points
-        series.removePoints(0, series.count)
+        wpmSeries.removePoints(0, wpmSeries.count)
     }
 
     ChartView {
@@ -38,7 +40,7 @@ Rectangle {
         backgroundColor: "transparent"
 
         LineSeries {
-            id: series
+            id: wpmSeries
             name: "LineSeries"
             color: "#91170c"
             width: 3
@@ -64,8 +66,8 @@ Rectangle {
                 min: 0
                 max: {
                     let max = 0
-                    for (let i = 0; i < series.count; i++) {
-                        let wpm = series.at(i).y
+                    for (let i = 0; i < wpmSeries.count; i++) {
+                        let wpm = wpmSeries.at(i).y
                         if (wpm > max) {
                             max = wpm
                         }

@@ -60,19 +60,11 @@ Rectangle {
 
     function updateRemainingTime() {
         remainingTime--
-        if (remainingTime == 0) {
-            testRect.state = "testFinished"
-            input.clear()
-            root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
-                          " Accuracy: " + typingTest.calculateAccuracy() + "%"
-        }
     }
 
     function finishTest() {
         testRect.state = "testFinished"
         input.clear()
-        root.wpmacc = "WPM: " + typingTest.calculateWPM(testDuration) +
-                      " Accuracy: " + typingTest.calculateAccuracy() + "%"
     }
 
     // test prompt - words which the user should type
@@ -113,7 +105,6 @@ Rectangle {
             testRect.state = "testReady"
             input.text = ""
             input.focus = true
-            root.wpmacc = ""
             typingTest.reset()
         }
         palette {
@@ -145,8 +136,6 @@ Rectangle {
                 // start the test automatically
                 // when the user starts typing
                 parent.state = "testActive"
-                //timer.start()
-                root.wpmacc = ""
             }
             if (parent.state === "testActive") {
                 // track progress and update test prompt

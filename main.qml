@@ -15,8 +15,6 @@ Window {
 
     onClosing: testResultsModel.saveToFile("results.csv")
 
-    property string wpmacc: ""
-
     Image {
         id: kb
         anchors.leftMargin: 10
@@ -25,7 +23,6 @@ Window {
         y: 10
         source: "qrc:/images/keyboard-solid.svg"
         sourceSize.width: 50
-        //sourceSize.height: parent.height
     }
 
     Text {
@@ -91,16 +88,11 @@ Window {
         width: parent.width
         height: 700
         currentIndex: bar.currentIndex
-        //anchors.top: bar.bottom
         y: bar.y + bar.height + 40
-        //anchors.horizontalCenter: parent.horizontalCenter
-        //Layout.alignment: Qt.AlignHCenter
-        //width: 800
 
         Item {
             id: testTab
             Layout.alignment: Qt.AlignHCenter
-            //anchors.horizontalCenter: parent.horizontalCenter
             TestInterface {
                 id: testInterface
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -108,7 +100,7 @@ Window {
                 anchors.top: parent.top
             }
             DetailedTestResults {
-                id: resultsRect
+                id: currentTestResults
                 testDuration: 5
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: testInterface.bottom
@@ -123,43 +115,37 @@ Window {
                 onTriggered: {
                     // clear old results when a new test starts
                     if (testInterface.remainingTime === testInterface.testDuration) {
-                        resultsRect.clearResults()
+                        currentTestResults.clearWPMSeries()
                     }
 
                     testInterface.updateRemainingTime()
                     // log current WPM for displaying in a chart after test ends
                     let currentTime = testInterface.testDuration - testInterface.remainingTime
                     let wpm = typingTest.calculateWPM(currentTime)
-                    resultsRect.appendToWPMSeries(currentTime, wpm)
+                    currentTestResults.appendToWPMSeries(currentTime, wpm)
 
                     // save results when test is finished
                     if (testInterface.remainingTime === 0) {
                         let acc = typingTest.calculateAccuracy();
                         testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
-                        //testResultsModel.saveToFile("results.csv")
                         testInterface.finishTest()
+                        currentTestResults.wpm = wpm
+                        currentTestResults.accuracy = acc
                     }
-
-                    //console.log(currentTime)
-                    //console.log("entry ", currentTime, wpm)
-
-                    //if (testInterface.remainingTime == 0) {
-                    //    testInterface.finishTest()
-                    //}
                 }
             }
 
             // fade-in/out for test results
             states: [
                 State { when: testInterface.state === "testFinished";
-                    PropertyChanges { target: resultsRect; opacity: 1.0 }
+                    PropertyChanges { target: currentTestResults; opacity: 1.0 }
                 },
                 State { when: testInterface.state !== "testFinished";
-                    PropertyChanges { target: resultsRect; opacity: 0.0 }
+                    PropertyChanges { target: currentTestResults; opacity: 0.0 }
                 }
             ]
             transitions: Transition {
-                NumberAnimation { target: resultsRect; property: "opacity"; duration: 250 }
+                NumberAnimation { target: currentTestResults; property: "opacity"; duration: 250 }
             }
         }
         Item {
@@ -169,31 +155,26 @@ Window {
             Text {
                 id: resultsTitle
                 anchors.left: table.left
-                //anchors.horizontalCenter: parent.horizontalCenter
                 color: "#c58940"
                 font.pixelSize: 24
                 text: "results"
             }
             TableView {
                 id: table
-                //anchors.fill: parent
                 width: 600
                 height: 480
                 anchors.top: horizontalHeader.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
-                //topMargin: horizontalHeader.implicitHeight
                 columnSpacing: 2
                 rowSpacing: 1
                 clip: true
                 boundsMovement: Flickable.StopAtBounds
-                model: testResultsModel//mod
+                model: testResultsModel
 
                 delegate: Rectangle {
-                    //required property int index
-                    color: (row % 2 === 0 ? "#2b2a2a": "transparent") // ListView.isCurrentItem ? "red" :
+                    color: (row % 2 === 0 ? "#2b2a2a": "transparent")
                     implicitWidth: column !== 3 ? 110 : 180
                     implicitHeight: 40
-                    //border.width: 1
 
                     Text {
                         text: display
@@ -216,7 +197,6 @@ Window {
                 textRole: "display"
                 syncView: table
                 anchors.left: table.left
-                //anchors.top: parent.top
                 anchors.top: resultsTitle.bottom
                 delegate: Rectangle {
                     implicitWidth: modelData === "<u>date/time</u>" ? 110 : 180
@@ -241,36 +221,6 @@ Window {
                 font.pixelSize: 60
                 text: "info"
             }
-
-            //TableModel {
-            //    id: mod
-            //    TableModelColumn { display: "name" }
-            //    TableModelColumn { display: "color" }
-
-            //    rows: [
-            //        {
-            //            "name": "cat",
-            //            "color": "black"
-            //        },
-            //        {
-            //            "name": "dog",
-            //            "color": "brown"
-            //        },
-            //        {
-            //            "name": "bird",
-            //            "color": "white"
-            //        },
-            //        {
-            //            "name": "dog",
-            //            "color": "brown"
-            //        },
-            //        {
-            //            "name": "bird",
-            //            "color": "white"
-            //        }
-            //    ]
-            //}
-
         }
     }
 }
