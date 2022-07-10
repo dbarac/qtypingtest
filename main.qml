@@ -15,12 +15,10 @@ Window {
 
     onClosing: testResultsModel.saveToFile("results.csv")
 
-    //onActiveFocusItemChanged: print("activeFocusItem", activeFocusItem)
     property string wpmacc: ""
 
     Image {
         id: kb
-        //anchors.topMargin: 20
         anchors.leftMargin: 10
         anchors.left: parent.left
         x: 10
@@ -103,7 +101,7 @@ Window {
             id: testTab
             Layout.alignment: Qt.AlignHCenter
             //anchors.horizontalCenter: parent.horizontalCenter
-            TypingTest {
+            TestInterface {
                 id: testInterface
                 anchors.horizontalCenter: parent.horizontalCenter
                 testDuration: 5
