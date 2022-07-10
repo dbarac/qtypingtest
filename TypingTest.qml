@@ -128,7 +128,7 @@ Rectangle {
         width: 640//root.width - 200
         color: "#847869"//"white"
         horizontalAlignment: Text.AlignHCenter
-        text: typingTest.guiTestStr;
+        text: typingTest.testPrompt;
         font.pixelSize: 23
         wrapMode: Text.WordWrap
     }
@@ -158,8 +158,9 @@ Rectangle {
             input.text = ""
             input.focus = true
             root.wpmacc = ""
-            typingTest.sampleWordDataset()
-            typingTest.updateGuiTestStr(true)
+            //typingTest.sampleWordDataset()
+            //typingTest.updateTestPrompt(true)
+            typingTest.reset()
         }
         palette {
             buttonText: (hovered || activeFocus) ? "#b5a593" : "#847869"

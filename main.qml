@@ -13,6 +13,8 @@ Window {
     color: "#202020"
     id: root
 
+    onClosing: testResultsModel.saveToFile("results.csv")
+
     //onActiveFocusItemChanged: print("activeFocusItem", activeFocusItem)
     property string wpmacc: ""
 
@@ -136,7 +138,7 @@ Window {
                     if (testInterface.remainingTime === 0) {
                         let acc = typingTest.calculateAccuracy();
                         testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
-                        testResultsModel.saveToFile("results.csv")
+                        //testResultsModel.saveToFile("results.csv")
                         testInterface.finishTest()
                     }
 
@@ -164,18 +166,21 @@ Window {
         }
         Item {
             id: resultsTab
-            /*Text {
-                anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
+            width: 600
+            Text {
+                id: resultsTitle
+                anchors.left: table.left
+                //anchors.horizontalCenter: parent.horizontalCenter
                 color: "#c58940"
-                font.pixelSize: 60
+                font.pixelSize: 24
                 text: "results"
-            }*/
+            }
             TableView {
                 id: table
                 //anchors.fill: parent
                 width: 600
-                height: 180
+                height: 480
                 anchors.top: horizontalHeader.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 //topMargin: horizontalHeader.implicitHeight
@@ -201,7 +206,7 @@ Window {
                 }
                 ScrollBar.vertical: ScrollBar {
                     active: true
-                    //policy: ScrollBar.AlwaysOn
+                    policy: ScrollBar.AlwaysOn
                 }
             }
             HorizontalHeaderView {
@@ -213,7 +218,8 @@ Window {
                 textRole: "display"
                 syncView: table
                 anchors.left: table.left
-                anchors.top: parent.top
+                //anchors.top: parent.top
+                anchors.top: resultsTitle.bottom
                 delegate: Rectangle {
                     implicitWidth: modelData === "<u>date/time</u>" ? 110 : 180
                     implicitHeight: 40
@@ -226,7 +232,6 @@ Window {
                     }
                 }
             }
-
         }
         Item {
             id: infoTab

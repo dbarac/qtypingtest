@@ -1,25 +1,35 @@
 #include <random>
 #include <QDebug>
 #include <QStringView>
+#include <QString>
 
 #include "typingtest.h"
 
 TypingTest::TypingTest(std::vector<QString>& wordDataset,
                        unsigned wordsPerSample, QObject *parent)
     : QObject{parent}, m_wordsPerSample{wordsPerSample},
-      m_wordDataset{wordDataset}, m_rng{rd()},
-      randomWordIdx{std::uniform_int_distribution<int>(0, m_wordDataset.size()-1)}
+      m_wordDataset{wordDataset}, m_rng{m_rd()},
+      m_randomWordIdx{std::uniform_int_distribution<int>(0, m_wordDataset.size()-1)}
 {
+    reset();
+}
+
+void TypingTest::reset()
+{
+    m_prevInputLen = 0;
+    m_correctChars = 0;
+    m_totalTypedChars = 0;
+    m_totalAcceptedChars = 0;
     sampleWordDataset();
-    updateGuiTestStr(true);
+    updateTestPrompt(true);
 }
 
 void TypingTest::sampleWordDataset()
 {
-    currentWordIdx = 0;
+    m_currentWordIdx = 0;
     m_currentWordSample = std::vector<QString>();
     for (unsigned i = 0; i < m_wordsPerSample; i++) {
-        QString& randomWord = m_wordDataset[randomWordIdx(m_rng)];
+        QString& randomWord = m_wordDataset[m_randomWordIdx(m_rng)];
         m_currentWordSample.push_back(randomWord);
     }
 }
@@ -33,15 +43,18 @@ bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
 }
 
 /*
- * Update character counts (corrent and total).
- * Set the color of the current word depending on text input correctness.
- * Go to the next word if space was pressed.
+ * This function should be called every time the user presses a key.
+ *
+ * - Update character counts (corrent and total).
+ * - Update color of the current word depending on text input correctness.
+ * - Go to the next word if space was pressed.
+ * - Load new word sample if all words in the current sample were typed.
  */
 void TypingTest::processKbInput(QString& input)
 {
-    QString& currentTestWord = m_currentWordSample[currentWordIdx];
+    QString& currentTestWord = m_currentWordSample[m_currentWordIdx];
     QString wordColor;
-    bool resetTestStr = false;
+    bool resetTestPrompt = false;
 
     /* Update character counts only if keypress was not backspace. */
     if (input.size() > m_prevInputLen) {
@@ -51,7 +64,8 @@ void TypingTest::processKbInput(QString& input)
         m_totalTypedChars++;
     }
     if (!input.isEmpty() && input.endsWith(" ")) {
-        /* set color for typed word, go to next word */
+        /* User pressed space. Update accepted character count,
+         * set color for typed word and change active word in test prompt. */
         QStringView typedWord(&input[0], input.size()-1);
         if (typedWord == currentTestWord) {
             m_totalAcceptedChars += input.size();
@@ -59,81 +73,76 @@ void TypingTest::processKbInput(QString& input)
         } else {
             wordColor = "#bb1e10";
         }
-        m_displayStrFinished.append(
+        m_testPromptFinished.append(
             QString("<font color='%1'>%2 </font>").arg(wordColor, currentTestWord));
-        currentWordIdx++;
-        if (currentWordIdx == m_wordsPerSample) {
+        m_currentWordIdx++;
+        if (m_currentWordIdx == m_wordsPerSample) {
             sampleWordDataset();
-            resetTestStr = true;
+            resetTestPrompt = true;
         } else {
-            QString& nextTestWord = m_currentWordSample[currentWordIdx];
-            m_displayStrCurrent =
+            QString& nextTestWord = m_currentWordSample[m_currentWordIdx];
+            m_testPromptCurrentWord =
                 QString("<u>%1</u>").arg(nextTestWord);
-            m_displayStrUntyped.remove(0, nextTestWord.size()+1);
+            m_testPromptUntyped.remove(0, nextTestWord.size()+1);
         }
     } else {
-        /* set color of current word depending on the correctness of input so far */
-        colorActiveWord(currentTestWord, input);
+        /* Set color for each typed letter of current word,
+         * depending on correctness. */
+        colorCurrentWord(currentTestWord, input);
     }
     m_prevInputLen = input.size();
-    updateGuiTestStr(resetTestStr);
+    updateTestPrompt(resetTestPrompt);
 }
 
-void TypingTest::colorActiveWord(const QString& currentWord, const QString& input)
+void TypingTest::colorCurrentWord(const QString& currentWord, const QString& userInput)
 {
     QString color;
-    m_displayStrCurrent.clear();
-    m_displayStrCurrent.append("<u>");
+    m_testPromptCurrentWord.clear();
+    m_testPromptCurrentWord.append("<u>");
     unsigned len = currentWord.size();
     for (unsigned i = 0; i < len; i++) {
-        if (i == input.size()) {
-            /* append untyped part of word (default color) */
-            m_displayStrCurrent.append(currentWord.right(len-i));
+        if (i == userInput.size()) {
+            /* append untyped part of word (with default color) */
+            m_testPromptCurrentWord.append(currentWord.right(len-i));
             break;
         }
-        if (input[i] == currentWord[i]) {
+        if (userInput[i] == currentWord[i]) {
             color = "#fae1c3";
         } else {
             color = "#bb1e10"; /* error */
         }
-        m_displayStrCurrent.append(
+        m_testPromptCurrentWord.append(
             QString("<font color='%1'>%2</font>").arg(color, currentWord[i]));
     }
-    m_displayStrCurrent.append("</u>");
+    m_testPromptCurrentWord.append("</u>");
 }
 
-void TypingTest::doSomething(const QString& text) {
-    qDebug() << "TypingTest doSomething called with" << text;
+/*
+ * testPrompt contains a sample of words that the user should type.
+ * The current word is underlined.
+ * Words are colored depending on input correctness.
+ */
+QString TypingTest::testPrompt() const {
+    return m_testPrompt;
 }
 
-QString TypingTest::guiTestStr() const {
-    return m_guiTestStr;
-}
-
-void TypingTest::setGuiTestStr(QString testStr) {
-    if(m_guiTestStr != testStr) {
-        m_guiTestStr = testStr;
-        emit guiTestStrChanged();
-    }
-}
-
-void TypingTest::updateGuiTestStr(bool initialize=false) {
+void TypingTest::updateTestPrompt(bool initialize=false) {
     if (initialize) {
-        m_displayStrFinished.clear();
-        m_displayStrCurrent =
+        m_testPromptFinished.clear();
+        m_testPromptCurrentWord =
             QString("<u>%1</u>").arg(m_currentWordSample[0]);
-        m_displayStrUntyped.clear();
+        m_testPromptUntyped.clear();
         for (unsigned i = 1; i < m_wordsPerSample; i++) {
             QString& word = m_currentWordSample[i];
-            m_displayStrUntyped.append(" ");
-            m_displayStrUntyped.append(word);
+            m_testPromptUntyped.append(" ");
+            m_testPromptUntyped.append(word);
         }
     }
-    m_guiTestStr.clear();
-    m_guiTestStr.append(m_displayStrFinished);
-    m_guiTestStr.append(m_displayStrCurrent);
-    m_guiTestStr.append(m_displayStrUntyped);
-    emit guiTestStrChanged();
+    m_testPrompt.clear();
+    m_testPrompt.append(m_testPromptFinished);
+    m_testPrompt.append(m_testPromptCurrentWord);
+    m_testPrompt.append(m_testPromptUntyped);
+    emit testPromptChanged();
 }
 
 /*
