@@ -5,8 +5,6 @@ Rectangle {
     id: testRect
     required property int testDuration
     width: parent.width; height: 330
-    anchors.top: bar.bottom
-    anchors.topMargin: 20
     color: "#202020"
     state: "testReady"
     property int remainingTime: testDuration

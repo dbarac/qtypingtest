@@ -15,34 +15,18 @@ Window {
 
     onClosing: testResultsModel.saveToFile("results.csv")
 
-    Image {
-        id: kb
-        anchors.leftMargin: 10
-        anchors.left: parent.left
-        x: 10
-        y: 10
-        source: "qrc:/images/keyboard-solid.svg"
-        sourceSize.width: 50
-    }
-
-    Text {
-        id: title
-        y: 5
-        color: "#fae1c3"
-        anchors.left: kb.right
-        anchors.leftMargin: 10
-        anchors.topMargin: 10
-        text: "qtypingtest"
-        font.bold: false
-        font.pixelSize: 35
+    TitleBar {
+        id: titleBar
+        anchors.top: parent.top
+        width: parent.width
     }
 
     TabBar {
-        //anchors.top: resultsRect.bottom
-        y: title.y + kb.height + 20
+        id: tabBar
+        anchors.top: titleBar.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        id: bar
         width: 640
+        height: 40
         font.pixelSize: 24
         focusPolicy: Qt.NoFocus
 
@@ -50,7 +34,7 @@ Window {
         background: Rectangle {
             color: "#fae1c3"
             height: 2
-            y: bar.y - 26
+            y: tabBar.y - 22
         }
         spacing: 5
 
@@ -60,7 +44,7 @@ Window {
             delegate: TabButton {
                 width: implicitWidth
                 function getButtonColor() {
-                    if (bar.currentIndex === TabBar.index) {
+                    if (tabBar.currentIndex === TabBar.index) {
                         return "#fae1c3"
                     } else {
                         return hovered ? "#b5a593" : "#847869"
@@ -87,8 +71,9 @@ Window {
         id: tabs
         width: parent.width
         height: 700
-        currentIndex: bar.currentIndex
-        y: bar.y + bar.height + 40
+        currentIndex: tabBar.currentIndex
+        anchors.top: tabBar.bottom
+        anchors.topMargin: 20
 
         Item {
             id: testTab
@@ -101,7 +86,7 @@ Window {
             }
             DetailedTestResults {
                 id: currentTestResults
-                testDuration: 5
+                testDuration: testInterface.testDuration
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: testInterface.bottom
                 opacity: 0
