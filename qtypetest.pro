@@ -3,9 +3,11 @@ QT += charts
 
 SOURCES += \
         main.cpp \
+        testinfo.cpp \
+        testinfomodel.cpp \
         typingtest.cpp
 
-resources.files = main.qml TestResults.qml TypingTest.qml
+resources.files = main.qml DetailedTestResults.qml TestInterface.qml
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
     resources.qrc
@@ -23,8 +25,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     dataset.h \
+    testinfo.h \
+    testinfomodel.h \
     typingtest.h
 
 DISTFILES += \
-    TestResults.qml \
-    TypingTest.qml
+    DetailedTestResults.qml \
+    TestInterface.qml

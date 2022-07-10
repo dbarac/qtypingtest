@@ -4,14 +4,9 @@ import QtCharts
 Rectangle {
     property alias wpmacc: wpmacc.text
     required property int testDuration
-    //id: resultsRect
-    //anchors.top: testInterface.bottom
     color: "#202020" //"#847869"
-    //border.color: "#847869"
-    //border.width: 2
     width: 640
     height: 300
-    //y: inputbox.height
 
     Text {
         id: wpmacc
@@ -21,22 +16,6 @@ Rectangle {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
     }
-
-     /*Timer {
-        id: charttimer
-        interval: 1000;
-        repeat: true
-        running: true
-        property int val: 0
-        onTriggered: {
-            val++
-            series.append(val, val * 1.5)
-            console.log(val * 2)
-            console.log(series.at(val-1))
-            //resultsChart.axisX().min = 0
-            series.axisX.max = 50
-        }
-    }*/
 
     function appendToWPMSeries(time, wpm) {
         series.append(time, wpm)
@@ -57,7 +36,6 @@ Rectangle {
         anchors.fill: parent
         legend.visible: false
         backgroundColor: "transparent"
-        //theme: ChartView.ChartThemeBrownSand bg is white when this is uncommented?
 
         LineSeries {
             id: series
@@ -96,21 +74,6 @@ Rectangle {
                 }
                 titleText:"<font color='#847869'>Current WPM</font>"
             }
-            /*XYPoint { x: 1; y: 70 }
-            XYPoint { x: 2; y: 72 }
-            XYPoint { x: 3; y: 68 }
-            XYPoint { x: 4; y: 75 }
-            XYPoint { x: 5; y: 80 }
-            XYPoint { x: 6; y: 82 }
-            XYPoint { x: 7; y: 68 }
-            XYPoint { x: 8; y: 84 }
-            XYPoint { x: 9; y: 88 }
-            XYPoint { x: 10; y: 90 }
-            XYPoint { x: 11; y: 92 }
-            XYPoint { x: 12; y: 78 }
-            XYPoint { x: 13; y: 95 }
-            XYPoint { x: 14; y: 105 }
-            XYPoint { x: 15; y: 107 }*/
         }
     }
 }

@@ -107,7 +107,7 @@ Window {
                 testDuration: 5
                 anchors.top: parent.top
             }
-            TestResults {
+            DetailedTestResults {
                 id: resultsRect
                 testDuration: 5
                 anchors.horizontalCenter: parent.horizontalCenter
