@@ -7,7 +7,9 @@ SOURCES += \
         testinfomodel.cpp \
         typingtest.cpp
 
-resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml
+resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml \
+    TestTab.qml ResultsTab.qml AboutTab.qml
+
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
     resources.qrc

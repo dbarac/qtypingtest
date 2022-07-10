@@ -111,9 +111,9 @@ Rectangle {
 
         font.pixelSize: 25
         background: Rectangle {
-               implicitWidth: 130
-               implicitHeight: 40
-               color: "transparent"
+            implicitWidth: 130
+            implicitHeight: 40
+            color: "transparent"
         }
         //focusPolicy: Qt.NoFocus
         activeFocusOnTab: true
