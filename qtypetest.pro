@@ -3,8 +3,8 @@ QT += charts
 
 SOURCES += \
         main.cpp \
-        testinfo.cpp \
-        testinfomodel.cpp \
+        testresults.cpp \
+        testresultsmodel.cpp \
         typingtest.cpp
 
 resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml \
@@ -27,8 +27,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     dataset.h \
-    testinfo.h \
-    testinfomodel.h \
+    testresults.h \
+    testresultsmodel.h \
     typingtest.h
 
 DISTFILES += \

@@ -4,7 +4,7 @@
 #include <QAbstractTableModel>
 #include <QFile>
 #include <QList>
-#include "testinfo.h"
+#include "testresults.h"
 
 
 enum Column {
@@ -15,12 +15,12 @@ enum Column {
     count /* number of columns */
 };
 
-class TestInfoModel : public QAbstractTableModel
+class TestResultsModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit TestInfoModel(QObject *parent = nullptr);
+    explicit TestResultsModel(QObject *parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -38,7 +38,7 @@ public slots:
 
 private:
     // test attempt info list
-    QList<TestInfo> m_testInfoList;
+    QList<TestResults> m_testInfoList;
 };
 
 #endif // TESTINFOMODEL_H

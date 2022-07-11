@@ -15,7 +15,7 @@ Item {
     }
     TableView {
         id: table
-        width: 600
+        width: 540
         height: 480
         anchors.top: horizontalHeader.bottom
         anchors.horizontalCenter: parent.horizontalCenter

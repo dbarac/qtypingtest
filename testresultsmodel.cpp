@@ -1,21 +1,21 @@
-#include "testinfo.h"
-#include "testinfomodel.h"
+#include "testresults.h"
+#include "testresultsmodel.h"
 #include <QDateTime>
 #include <QFile>
 #include <QDebug>
 
 
-TestInfoModel::TestInfoModel(QObject *parent)
+TestResultsModel::TestResultsModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
 
-QVariant TestInfoModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant TestResultsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     // FIXME: Implement me!
 }
 
-int TestInfoModel::rowCount(const QModelIndex &parent) const
+int TestResultsModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -25,7 +25,7 @@ int TestInfoModel::rowCount(const QModelIndex &parent) const
     return m_testInfoList.count();
 }
 
-int TestInfoModel::columnCount(const QModelIndex &parent) const
+int TestResultsModel::columnCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -35,7 +35,7 @@ int TestInfoModel::columnCount(const QModelIndex &parent) const
     return Column::count;
 }
 
-QVariant TestInfoModel::data(const QModelIndex &index, int role) const
+QVariant TestResultsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
@@ -44,7 +44,7 @@ QVariant TestInfoModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const TestInfo& testResults = m_testInfoList[index.row()];
+    const TestResults& testResults = m_testInfoList[index.row()];
 
     switch (index.column()) {
         case Column::WPM:
@@ -61,14 +61,14 @@ QVariant TestInfoModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void TestInfoModel::appendEntry(unsigned WPM, unsigned accuracy, unsigned testDuration)
+void TestResultsModel::appendEntry(unsigned WPM, unsigned accuracy, unsigned testDuration)
 {
     beginInsertRows(QModelIndex(), m_testInfoList.count(), m_testInfoList.count());
-    m_testInfoList.append(TestInfo(WPM, accuracy, testDuration));
+    m_testInfoList.append(TestResults(WPM, accuracy, testDuration));
     endInsertRows();
 }
 
-void TestInfoModel::loadFromFile(QFile file)
+void TestResultsModel::loadFromFile(QFile file)
 {
     if(file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
@@ -98,13 +98,13 @@ void TestInfoModel::loadFromFile(QFile file)
     }
 }
 
-void TestInfoModel::saveToFile(QString path)
+void TestResultsModel::saveToFile(QString path)
 {
     QFile file(path);
     if(file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << "wpm,accuracy,testDuration,timestamp\n";
-        for (TestInfo& result : m_testInfoList) {
+        for (TestResults& result : m_testInfoList) {
             out << result.m_WPM << ","
                 << result.m_accuracy << ","
                 << result.m_testDuration << ","
