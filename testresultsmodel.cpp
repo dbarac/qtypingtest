@@ -48,14 +48,14 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
 
     switch (index.column()) {
         case Column::WPM:
-            return testResults.m_WPM;
+            return testResults.WPM();
         case Column::Accuracy:
-            return testResults.m_accuracy;
+            return testResults.accuracy();
         case Column::TestDuration:
-            return testResults.m_testDuration;
+            return testResults.testDuration();
         case Column::DateTime:
             return QDateTime::fromSecsSinceEpoch(
-                testResults.m_timestamp);
+                testResults.timestamp());
     }
 
     return QVariant();
@@ -100,10 +100,10 @@ void TestResultsModel::saveToFile(QString path)
         QTextStream out(&file);
         out << "wpm,accuracy,testDuration,timestamp\n";
         for (TestResults& result : m_testInfoList) {
-            out << result.m_WPM << ","
-                << result.m_accuracy << ","
-                << result.m_testDuration << ","
-                << result.m_timestamp << "\n";
+            out << result.WPM() << ","
+                << result.accuracy() << ","
+                << result.testDuration() << ","
+                << result.timestamp() << "\n";
         }
     }
 }

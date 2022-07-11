@@ -11,7 +11,11 @@ class TestResults
 public:
     TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration);
     TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration, qint64 timestamp);
-//private:
+    unsigned WPM() const;
+    unsigned accuracy() const;
+    unsigned testDuration() const;
+    qint64 timestamp() const;
+private:
     unsigned m_WPM;
     unsigned m_accuracy;
     unsigned m_testDuration;
