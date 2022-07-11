@@ -5,10 +5,11 @@ SOURCES += \
         main.cpp \
         testresults.cpp \
         testresultsmodel.cpp \
+        resultssortfilterproxymodel.cpp \
         typingtest.cpp
 
 resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml \
-    TestTab.qml ResultsTab.qml AboutTab.qml
+    TestTab.qml ResultsTab.qml AboutTab.qml RadioSelector.qml
 
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
@@ -29,6 +30,7 @@ HEADERS += \
     dataset.h \
     testresults.h \
     testresultsmodel.h \
+    resultssortfilterproxymodel.h \
     typingtest.h
 
 DISTFILES += \

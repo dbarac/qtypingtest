@@ -8,6 +8,7 @@
 
 #include "typingtest.h"
 #include "testresultsmodel.h"
+#include "resultssortfilterproxymodel.h"
 #include "dataset.h"
 
 int main(int argc, char *argv[])
@@ -25,10 +26,15 @@ int main(int argc, char *argv[])
     TestResultsModel *testResults = new TestResultsModel(&app);
     testResults->loadFromFile(QFile("results.csv"));
 
+    ResultsSortFilterProxyModel *proxyModel = new ResultsSortFilterProxyModel(&app);
+    proxyModel->setSourceModel(testResults);
+    proxyModel->sort(Column::DateTime, Qt::DescendingOrder);
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("typingTest", typingTest);
     engine.rootContext()->setContextProperty("testResultsModel", testResults);
-    //typingTest->doSomething("yooo");
+    engine.rootContext()->setContextProperty("resultsProxyModel", proxyModel);
+
     const QUrl url(u"qrc:/qtypetest/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -36,8 +42,6 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-
-    //QObject::connext(&app, QGuiApplication::lastWindowClosed)
 
     return app.exec();
 }

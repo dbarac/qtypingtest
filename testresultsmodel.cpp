@@ -55,7 +55,7 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
             return testResults.m_testDuration;
         case Column::DateTime:
             return QDateTime::fromSecsSinceEpoch(
-                testResults.m_timestamp).toString("dd/MM/yyyy hh:mm:ss");
+                testResults.m_timestamp);
     }
 
     return QVariant();
@@ -88,12 +88,7 @@ void TestResultsModel::loadFromFile(QFile file)
             unsigned accuracy = row[Column::Accuracy].toUInt();
             unsigned testDuration = row[Column::TestDuration].toUInt();
             qint64 timestamp = row[Column::DateTime].toUInt();
-            appendEntry(WPM, accuracy, testDuration);
-            //appendEntry(
-            //foreach(const QString& cell, line.split(",")) {
-            //    row.append(cell.trimmed());
-            //}
-            //data.append(row);
+            m_testInfoList.append(TestResults(WPM, accuracy, testDuration, timestamp));
         }
     }
 }
