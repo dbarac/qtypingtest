@@ -2,7 +2,10 @@
 #define TESTINFOMODEL_H
 
 #include <QAbstractTableModel>
+#include <QFile>
+#include <QList>
 #include "testinfo.h"
+
 
 enum Column {
     WPM = 0,
@@ -26,7 +29,10 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent) const override;
 
+    void loadFromFile(QFile file);
+
 public slots:
+    void saveToFile(QString path);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void appendEntry(unsigned WPM, unsigned accuracy, unsigned testDuration);
 
