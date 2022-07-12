@@ -7,7 +7,7 @@
 #include "testresults.h"
 
 
-enum Column {
+enum ResultsColumn {
     WPM = 0,
     Accuracy,
     TestDuration,

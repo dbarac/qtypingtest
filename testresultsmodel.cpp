@@ -12,7 +12,19 @@ TestResultsModel::TestResultsModel(QObject *parent)
 
 QVariant TestResultsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    // FIXME: Implement me!
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
+            case ResultsColumn::WPM:
+                return QString("<u>wpm</u>");
+            case ResultsColumn::Accuracy:
+                return QString("<u>accuracy</u>");
+            case ResultsColumn::TestDuration:
+                return QString("<u>duration</u>");
+            case ResultsColumn::DateTime:
+                return QString("<u>date/time</u>");
+        }
+    }
+    return QVariant();
 }
 
 int TestResultsModel::rowCount(const QModelIndex &parent) const
@@ -32,7 +44,7 @@ int TestResultsModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return Column::count;
+    return ResultsColumn::count;
 }
 
 QVariant TestResultsModel::data(const QModelIndex &index, int role) const
@@ -47,15 +59,14 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
     const TestResults& testResults = m_testInfoList[index.row()];
 
     switch (index.column()) {
-        case Column::WPM:
+        case ResultsColumn::WPM:
             return testResults.WPM();
-        case Column::Accuracy:
+        case ResultsColumn::Accuracy:
             return testResults.accuracy();
-        case Column::TestDuration:
+        case ResultsColumn::TestDuration:
             return testResults.testDuration();
-        case Column::DateTime:
-            return QDateTime::fromSecsSinceEpoch(
-                testResults.timestamp());
+        case ResultsColumn::DateTime:
+            return QDateTime::fromSecsSinceEpoch(testResults.timestamp());
     }
 
     return QVariant();
@@ -70,9 +81,8 @@ void TestResultsModel::appendEntry(unsigned WPM, unsigned accuracy, unsigned tes
 
 void TestResultsModel::loadFromFile(QFile file)
 {
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        // loop forever macro
         QString line;
         line = stream.readLine(); // skip header
         while (true) {
@@ -84,10 +94,10 @@ void TestResultsModel::loadFromFile(QFile file)
                 continue;
             }
             QStringList row = line.split(",");
-            unsigned WPM = row[Column::WPM].toUInt();
-            unsigned accuracy = row[Column::Accuracy].toUInt();
-            unsigned testDuration = row[Column::TestDuration].toUInt();
-            qint64 timestamp = row[Column::DateTime].toUInt();
+            unsigned WPM = row[ResultsColumn::WPM].toUInt();
+            unsigned accuracy = row[ResultsColumn::Accuracy].toUInt();
+            unsigned testDuration = row[ResultsColumn::TestDuration].toUInt();
+            qint64 timestamp = row[ResultsColumn::DateTime].toLongLong();
             m_testInfoList.append(TestResults(WPM, accuracy, testDuration, timestamp));
         }
     }
@@ -96,7 +106,7 @@ void TestResultsModel::loadFromFile(QFile file)
 void TestResultsModel::saveToFile(QString path)
 {
     QFile file(path);
-    if(file.open(QIODevice::WriteOnly)) {
+    if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << "wpm,accuracy,testDuration,timestamp\n";
         for (TestResults& result : m_testInfoList) {

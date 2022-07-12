@@ -9,7 +9,7 @@ Item {
 
     RadioSelector {
         id: durationSelector
-        anchors.left: table.left
+        anchors.left: resultsTable.left
         propertyName: "duration:"
         possibleValues: ["all", "5", "15", "30", "60"]
         defaultValue: "all"
@@ -27,7 +27,7 @@ Item {
     RadioSelector {
         id: sortBySelector
         anchors.top: durationSelector.bottom
-        anchors.left: table.left
+        anchors.left: resultsTable.left
         propertyName: "sort by:"
         possibleValues: ["wpm", "accuracy", "date/time"]
         defaultValue: "date/time"
@@ -49,7 +49,7 @@ Item {
     RadioSelector {
         id: orderSelector
         anchors.top: sortBySelector.bottom
-        anchors.left: table.left
+        anchors.left: resultsTable.left
         propertyName: "order:"
         possibleValues: ["ascending", "descending"]
         defaultValue: "descending"
@@ -63,37 +63,30 @@ Item {
     }
 
     HorizontalHeaderView {
-        id: horizontalHeader
-        boundsMovement: Flickable.StopAtBounds
-        model: [
-            "<u>wpm</u>", "<u>accuracy</u>", "<u>duration</u>", "<u>date/time</u>"
-        ]
-        textRole: "display"
-        syncView: table
-        //syncDirection: Qt.Horizontal
-        anchors.left: table.left
+        id: resultsTableHeader
+        syncView: resultsTable
+        anchors.left: resultsTable.left
         anchors.top: orderSelector.bottom
         anchors.topMargin: 20
+        boundsMovement: Flickable.StopAtBounds
         delegate: Rectangle {
-            implicitWidth: modelData === "<u>date/time</u>" ? 110 : 180
+            implicitWidth: column !== 3 ? 110 : 180
             implicitHeight: 40
-            //width: modelData === "<u>date/time</u>" ? 110 : 180
-            //height: 40
             color: "transparent"
             Text {
                 font.pixelSize: 20
                 color: "#847869"
-                text: modelData
+                text: display
                 anchors.centerIn: parent
             }
         }
     }
 
     TableView {
-        id: table
+        id: resultsTable
         width: 540
         height: 480
-        anchors.top: horizontalHeader.bottom
+        anchors.top: resultsTableHeader.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         columnSpacing: 2
         rowSpacing: 1

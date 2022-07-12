@@ -34,7 +34,7 @@ bool ResultsSortFilterProxyModel::filterAcceptsRow(int sourceRow,
         return true;
     }
     QModelIndex durationIdx =
-        sourceModel()->index(sourceRow, Column::TestDuration, sourceParent);
+        sourceModel()->index(sourceRow, ResultsColumn::TestDuration, sourceParent);
 
     return sourceModel()->data(durationIdx) == m_duration;
 }
