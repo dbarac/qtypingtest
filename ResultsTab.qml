@@ -85,7 +85,7 @@ Item {
     TableView {
         id: resultsTable
         width: 540
-        height: 480
+        height: 450
         anchors.top: resultsTableHeader.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         columnSpacing: 2
@@ -110,7 +110,12 @@ Item {
         }
         ScrollBar.vertical: ScrollBar {
             active: true
-            //policy: ScrollBar.AlwaysOn
+            visible: resultsTable.contentHeight > resultsTable.height
+            contentItem: Rectangle {
+                implicitWidth: 8
+                opacity: enabled ? 1 : 0.3
+                color: "#c58940"
+            }
         }
     }
 }

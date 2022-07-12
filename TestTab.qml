@@ -11,7 +11,6 @@ Item {
 
     DetailedTestResults {
         id: currentTestResults
-        testDuration: testInterface.testDuration
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: testInterface.bottom
         opacity: 0
@@ -39,6 +38,7 @@ Item {
                 let acc = typingTest.calculateAccuracy();
                 testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
                 testInterface.finishTest()
+                currentTestResults.testDuration = testInterface.testDuration
                 currentTestResults.wpm = wpm
                 currentTestResults.accuracy = acc
             }

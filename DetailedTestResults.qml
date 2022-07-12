@@ -2,12 +2,13 @@ import QtQuick 2.0
 import QtCharts
 
 Rectangle {
-    required property int testDuration
-    color: "#202020" //"#847869"
-    width: 640
-    height: 300
+    property int testDuration: 15
     property int wpm: 0
     property int accuracy: 0
+
+    color: "#202020"
+    width: 640
+    height: 300
 
     Text {
         id: finalResults
@@ -29,40 +30,38 @@ Rectangle {
     }
 
     ChartView {
-        id: resultsChart
-        title: "Test results"
-        titleFont.pixelSize: 22
-        titleFont.bold: true
-        titleColor: "#847869"
+        id: wpmChart
         antialiasing: true
         anchors.fill: parent
+        anchors.topMargin: 10
         legend.visible: false
         backgroundColor: "transparent"
 
         LineSeries {
             id: wpmSeries
-            name: "LineSeries"
+            name: "wpm"
             color: "#91170c"
             width: 3
+
             axisX: ValueAxis {
-                color: "#847869"
+                color: "#61584e"
                 labelsColor: "#847869"
                 labelsFont.pixelSize: 14
                 labelsFont.bold: true
-                gridLineColor: "#847869"
+                gridLineColor: "#61584e"
                 titleText: "<font color='#847869'>Time (s)</font>"
                 min: 1
-                max: testDuration//wpmSeries.count
-                //tickInterval: testDuration
-                tickCount: testDuration //wpmSeries.count//
+                max: testDuration
+                tickCount: 15
                 labelFormat: "%d"
             }
+
             axisY: ValueAxis {
-                color: "#847869"
+                color: "#61584e"
                 labelsColor: "#847869"
                 labelsFont.pixelSize: 14
                 labelsFont.bold: true
-                gridLineColor: "#847869"
+                gridLineColor: "#61584e"
                 min: 0
                 max: {
                     let max = 0
