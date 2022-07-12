@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>images/keyboard-solid.svg</file>
+        <file>images/arrow-rotate-right-solid.svg</file>
+        <file>images/about.svg</file>
+        <file>images/results.svg</file>
+        <file>images/test.svg</file>
     </qresource>
 </RCC>

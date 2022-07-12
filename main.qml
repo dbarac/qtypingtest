@@ -36,7 +36,7 @@ Window {
         spacing: 5
 
         Repeater {
-            model: ["test", "results", "info"]
+            model: ["test", "results", "about"]
 
             delegate: TabButton {
                 width: implicitWidth
@@ -83,14 +83,14 @@ Window {
         }
 
         Item {
-            id: infoTab
+            id: aboutTab
             Text {
-                id: info
+                id: about
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#c58940"
                 font.pixelSize: 60
-                text: "info"
+                text: "about"
             }
         }
     }
