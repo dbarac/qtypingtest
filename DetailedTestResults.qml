@@ -6,8 +6,8 @@ Item {
     property int wpm: 0
     property int accuracy: 0
 
-    width: 640
-    height: 300
+    implicitWidth: 640
+    implicitHeight: 300
 
     Text {
         id: finalResults

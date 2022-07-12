@@ -9,7 +9,7 @@ SOURCES += \
         typingtest.cpp
 
 resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml \
-    TestTab.qml TestResultsView.qml AboutTab.qml RadioSelector.qml
+    TestResultsView.qml RadioSelector.qml
 
 resources.prefix = /$${TARGET}
 RESOURCES += resources \

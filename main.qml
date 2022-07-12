@@ -72,8 +72,9 @@ Window {
         anchors.top: tabBar.bottom
         anchors.topMargin: 20
 
-        TestTab {
+        TestInterface {
             id: testTab
+            width: parent.width;
             Layout.alignment: Qt.AlignHCenter
         }
 

@@ -5,7 +5,7 @@ import QtCharts
 import Qt.labs.qmlmodels 1.0
 
 Item {
-    width: 600
+    implicitWidth: 600
 
     RadioSelector {
         id: durationSelector
@@ -21,7 +21,7 @@ Item {
                 // show results only for chosen test duration
                 resultsProxyModel.setFilterDuration(parseInt(value))
             }
-            // return position to first entry
+            // return position to table first entry
             resultsTable.contentY = 0
         }
     }

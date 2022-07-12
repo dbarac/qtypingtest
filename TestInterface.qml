@@ -4,72 +4,89 @@ import QtQuick.Layouts
 
 Item {
     id: testInterface
-    width: parent.width; height: 330
+    implicitHeight: 630
     state: "testReady"
-    property int testDuration: 15
-    property int nextTestDuration: 15
+    property int testDuration: 5
+    property int nextTestDuration: 5
     property int remainingTime: testDuration
 
     states: [
         State { name: "testReady"
             PropertyChanges { target: hintRect; opacity: 1.0 }
+            PropertyChanges { target: currentTestResults; opacity: 0.0 }
         },
         State { name: "testActive"
             PropertyChanges { target: hintRect; opacity: 0.0 }
+            //PropertyChanges { target: currentTestResults; opacity: 0.0 }
         },
         State { name: "testFinished"
             PropertyChanges { target: hintRect; opacity: 0.0 }
             PropertyChanges { target: restartButton; focus: true }
+            PropertyChanges { target: currentTestResults; opacity: 1.0 }
         }
     ]
     transitions: Transition {
         NumberAnimation { target: hintRect; property: "opacity"; duration: 250 }
+        NumberAnimation { target: currentTestResults; property: "opacity"; duration: 250 }
     }
 
-    RowLayout {
+    function finishTest() {
+        testInterface.state = "testFinished"
+        testInput.clear()
+    }
+
+    function restartTest() {
+            testInterface.testDuration = testInterface.nextTestDuration
+            remainingTime = testInterface.testDuration
+            testInterface.state = "testReady"
+            testInput.text = ""
+            testInput.focus = true
+            typingTest.reset()
+    }
+
+    Timer {
+        id: testTimer
+        interval: 1000;
+        repeat: true
+        running: testInterface.state === "testActive"
+        onTriggered: {
+            // clear old results when a new test starts
+            if (testInterface.remainingTime === testInterface.testDuration) {
+                currentTestResults.clearWPMSeries()
+            }
+
+            testInterface.remainingTime--
+
+            // log current WPM for displaying in a chart after test ends
+            let currentTime = testInterface.testDuration - testInterface.remainingTime
+            let wpm = typingTest.calculateWPM(currentTime)
+            currentTestResults.appendToWPMSeries(currentTime, wpm)
+
+            // save results when test is finished
+            if (testInterface.remainingTime === 0) {
+                let acc = typingTest.calculateAccuracy();
+                testResultsModel.appendEntry(wpm, acc, testInterface.testDuration)
+                testInterface.finishTest()
+
+                currentTestResults.testDuration = testInterface.testDuration
+                currentTestResults.wpm = wpm
+                currentTestResults.accuracy = acc
+            }
+        }
+    }
+
+    RadioSelector {
         id: durationRadioButtons
         anchors.top: parent.top
         anchors.left: testPrompt.left
-        Text {
-            text: "duration:"
-            font.pixelSize: 22
-            color: "#847869"
-        }
-
-        Repeater {
-            model: ["5", "15", "30", "60"]
-            delegate: RadioButton {
-                id: durationButton
-                focusPolicy: Qt.NoFocus
-                checked: modelData === "15"
-                text: modelData
-                spacing: 5
-
-                onClicked: {
-                    testInterface.nextTestDuration = parseInt(text)
-                    if (testInterface.state === "testReady") {
-                        testInterface.testDuration = testInterface.nextTestDuration
-                        testInterface.remainingTime = testInterface.testDuration
-                    }
-                }
-
-                contentItem: Text {
-                    function getButtonColor() {
-                        if (checked) {
-                            return "#c58940"
-                        } else {
-                            return hovered ? "#b5a593" : "#847869"
-                        }
-                    }
-                    text: durationButton.text
-                    font.pixelSize: 22
-                    opacity: enabled ? 1.0 : 0.3
-                    color: getButtonColor()
-                    verticalAlignment: Text.AlignVCenter
-                }
-                indicator: Item {
-                    // empty
-                }
+        propertyName: "duration:"
+        possibleValues: ["5", "15", "30", "60"]
+        defaultValue: "5"
+        onButtonClicked: (duration) => {
+            testInterface.nextTestDuration = parseInt(duration)
+            if (testInterface.state === "testReady") {
+                testInterface.testDuration = testInterface.nextTestDuration
+                testInterface.remainingTime = testInterface.testDuration
             }
         }
     }
@@ -103,15 +120,6 @@ Item {
             font.pixelSize: 20
             color: "#202020"
         }
-    }
-
-    function updateRemainingTime() {
-        remainingTime--
-    }
-
-    function finishTest() {
-        testInterface.state = "testFinished"
-        testInput.clear()
     }
 
     // test prompt - words which the user should type
@@ -148,14 +156,7 @@ Item {
             // empty handler, prevents onClicked
             // from being called when space is pressed
         }
-        onClicked: {
-            testInterface.testDuration = testInterface.nextTestDuration
-            remainingTime = parent.testDuration
-            testInterface.state = "testReady"
-            testInput.text = ""
-            testInput.focus = true
-            typingTest.reset()
-        }
+        onClicked: restartTest()
         palette {
             buttonText: (hovered || activeFocus) ? "#b5a593" : "#847869"
         }
@@ -196,5 +197,13 @@ Item {
                 testInput.text = ""
             }
         }
+    }
+
+    DetailedTestResults {
+        id: currentTestResults
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: restartButton.bottom
+        anchors.topMargin: 20
+        opacity: 0
     }
 }
