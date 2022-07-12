@@ -13,6 +13,10 @@ class TypingTest : public QObject
 public:
     explicit TypingTest(std::vector<QString>& wordDataset, unsigned wordsPerSample, QObject *parent = nullptr);
     QString testPrompt() const;
+    Q_INVOKABLE void reset();
+    Q_INVOKABLE void processKbInput(QString& input);
+    Q_INVOKABLE unsigned calculateWPM(unsigned testTimeSec);
+    Q_INVOKABLE unsigned calculateAccuracy();
 private:
     bool newCharIsCorrect(const QString& currentWord, QString& input);
     void colorCurrentWord(const QString& currentWord, const QString& input);
@@ -38,12 +42,6 @@ private:
     std::random_device m_rd;
     std::mt19937 m_rng;
     std::uniform_int_distribution<int> m_randomWordIdx;
-
-public slots:
-    void reset();
-    void processKbInput(QString& input);
-    unsigned calculateWPM(unsigned testTimeSec);
-    unsigned calculateAccuracy();
 
 signals:
     void testPromptChanged();

@@ -103,7 +103,7 @@ void TypingTest::colorCurrentWord(const QString& currentWord, const QString& use
     for (unsigned i = 0; i < len; i++) {
         if (i == userInput.size()) {
             /* append untyped part of word (with default color) */
-            m_testPromptCurrentWord.append(currentWord.right(len-i));
+            m_testPromptCurrentWord.append(QStringView(currentWord).right(len-i));
             break;
         }
         if (userInput[i] == currentWord[i]) {

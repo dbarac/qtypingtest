@@ -21,6 +21,8 @@ Item {
                 // show results only for chosen test duration
                 resultsProxyModel.setFilterDuration(parseInt(value))
             }
+            // return position to first entry
+            resultsTable.contentY = 0
         }
     }
 

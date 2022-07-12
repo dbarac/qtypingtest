@@ -1,12 +1,11 @@
 import QtQuick 2.0
 import QtCharts
 
-Rectangle {
+Item {
     property int testDuration: 15
     property int wpm: 0
     property int accuracy: 0
 
-    color: "#202020"
     width: 640
     height: 300
 

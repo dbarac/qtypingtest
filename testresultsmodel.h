@@ -1,9 +1,9 @@
 #ifndef TESTINFOMODEL_H
 #define TESTINFOMODEL_H
 
+#include <vector>
 #include <QAbstractTableModel>
 #include <QFile>
-#include <QList>
 #include "testresults.h"
 
 
@@ -38,7 +38,7 @@ public slots:
 
 private:
     // test attempt info list
-    QList<TestResults> m_testInfoList;
+    std::vector<TestResults> m_testResultsList;
 };
 
 #endif // TESTINFOMODEL_H

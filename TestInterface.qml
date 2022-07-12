@@ -2,10 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Rectangle {
-    id: testRect
+Item {
+    id: testInterface
     width: parent.width; height: 330
-    color: "#202020"
     state: "testReady"
     property int testDuration: 15
     property int nextTestDuration: 15
@@ -20,17 +19,17 @@ Rectangle {
         },
         State { name: "testFinished"
             PropertyChanges { target: hintRect; opacity: 0.0 }
-            PropertyChanges { target: restartBtn; focus: true }
+            PropertyChanges { target: restartButton; focus: true }
         }
     ]
     transitions: Transition {
-        NumberAnimation { target: hintRect; property: "opacity"; duration: 250}
+        NumberAnimation { target: hintRect; property: "opacity"; duration: 250 }
     }
 
     RowLayout {
         id: durationRadioButtons
         anchors.top: parent.top
-        anchors.left: testText.left
+        anchors.left: testPrompt.left
         Text {
             text: "duration:"
             font.pixelSize: 22
@@ -47,10 +46,10 @@ Rectangle {
                 spacing: 5
 
                 onClicked: {
-                    testRect.nextTestDuration = parseInt(text)
-                    if (testRect.state === "testReady") {
-                        testRect.testDuration = testRect.nextTestDuration
-                        testRect.remainingTime = testRect.testDuration
+                    testInterface.nextTestDuration = parseInt(text)
+                    if (testInterface.state === "testReady") {
+                        testInterface.testDuration = testInterface.nextTestDuration
+                        testInterface.remainingTime = testInterface.testDuration
                     }
                 }
 
@@ -68,7 +67,7 @@ Rectangle {
                     color: getButtonColor()
                     verticalAlignment: Text.AlignVCenter
                 }
-                indicator: Rectangle {
+                indicator: Item {
                     // empty
                 }
             }
@@ -79,7 +78,7 @@ Rectangle {
         id: remainingTimeStr
         anchors.top: durationRadioButtons.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: testRect.state === "testActive" ?  "#c58940" : "#847869"
+        color: testInterface.state === "testActive" ?  "#c58940" : "#847869"
         horizontalAlignment: Text.AlignHCenter
         text: parent.remainingTime.toString()
         font.pixelSize: 60
@@ -111,18 +110,19 @@ Rectangle {
     }
 
     function finishTest() {
-        testRect.state = "testFinished"
-        input.clear()
+        testInterface.state = "testFinished"
+        testInput.clear()
     }
 
     // test prompt - words which the user should type
     Text {
-        id: testText
+        id: testPrompt
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: hintRect.bottom
-        width: 640//root.width - 200
-        color: "#847869"//"white"
+        width: 640
+        height: 80
+        color: "#847869"
         horizontalAlignment: Text.AlignHCenter
         text: typingTest.testPrompt;
         font.pixelSize: 23
@@ -130,8 +130,8 @@ Rectangle {
     }
 
     Button {
-        id: restartBtn
-        anchors.top: testText.bottom
+        id: restartButton
+        anchors.top: testPrompt.bottom
         anchors.topMargin: 30
         anchors.horizontalCenter: parent.horizontalCenter
         text: "restart"
@@ -149,11 +149,11 @@ Rectangle {
             // from being called when space is pressed
         }
         onClicked: {
-            parent.testDuration = parent.nextTestDuration
+            testInterface.testDuration = testInterface.nextTestDuration
             remainingTime = parent.testDuration
-            testRect.state = "testReady"
-            input.text = ""
-            input.focus = true
+            testInterface.state = "testReady"
+            testInput.text = ""
+            testInput.focus = true
             typingTest.reset()
         }
         palette {
@@ -166,20 +166,19 @@ Rectangle {
             implicitHeight: 40
             color: "transparent"
         }
-        //focusPolicy: Qt.NoFocus
         activeFocusOnTab: true
     }
 
     TextInput {
-        id: input
-        anchors.top: restartBtn.bottom
+        id: testInput
+        anchors.top: restartButton.bottom
         anchors.topMargin: 30
         anchors.horizontalCenter: parent.horizontalCenter
         font.pixelSize: 30
         color: "#fae1c3"
         focus: true
         activeFocusOnTab: true
-        cursorVisible: true
+        visible: parent.state !== "testFinished"
         onTextEdited: {
             if (parent.state === "testReady") {
                 // start the test automatically
@@ -188,25 +187,14 @@ Rectangle {
             }
             if (parent.state === "testActive") {
                 // track progress and update test prompt
-                typingTest.processKbInput(input.text)
+                typingTest.processKbInput(testInput.text)
             }
 
             // clear input field if the user finished typing the current word
-            let pressedSpace = input.text.length > 0 && input.text.slice(-1) === " "
+            let pressedSpace = testInput.text.length > 0 && testInput.text.slice(-1) === " "
             if (pressedSpace) {
-                input.text = ""
+                testInput.text = ""
             }
         }
-
-        /*MouseArea {
-            anchors.fill: parent
-            propagateComposedEvents: true
-
-            onClicked: (event) => {
-                console.log("clicked on TextInput");
-                input.focus = true
-                event.accepted = false;
-            }
-        }*/
     }
 }

@@ -77,7 +77,7 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        ResultsTab {
+        TestResultsView {
             id: resultsTab
             Layout.alignment: Qt.AlignHCenter
         }
@@ -89,7 +89,6 @@ Window {
             Text {
                 id: about
                 width: 640
-                anchors.top: about.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#fae1c3"
                 font.pixelSize: 18

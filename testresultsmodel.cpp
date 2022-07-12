@@ -34,7 +34,7 @@ int TestResultsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_testInfoList.count();
+    return m_testResultsList.size();
 }
 
 int TestResultsModel::columnCount(const QModelIndex &parent) const
@@ -52,11 +52,11 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole)
         return QVariant();
 
-    if (index.row() < 0 || index.row() >= m_testInfoList.count()) {
+    if (index.row() < 0 || static_cast<size_t>(index.row()) >= m_testResultsList.size()) {
         return QVariant();
     }
 
-    const TestResults& testResults = m_testInfoList[index.row()];
+    const TestResults& testResults = m_testResultsList[index.row()];
 
     switch (index.column()) {
         case ResultsColumn::WPM:
@@ -74,8 +74,8 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
 
 void TestResultsModel::appendEntry(unsigned WPM, unsigned accuracy, unsigned testDuration)
 {
-    beginInsertRows(QModelIndex(), m_testInfoList.count(), m_testInfoList.count());
-    m_testInfoList.append(TestResults(WPM, accuracy, testDuration));
+    beginInsertRows(QModelIndex(), m_testResultsList.size(), m_testResultsList.size());
+    m_testResultsList.push_back(TestResults(WPM, accuracy, testDuration));
     endInsertRows();
 }
 
@@ -98,7 +98,7 @@ void TestResultsModel::loadFromFile(QFile file)
             unsigned accuracy = row[ResultsColumn::Accuracy].toUInt();
             unsigned testDuration = row[ResultsColumn::TestDuration].toUInt();
             qint64 timestamp = row[ResultsColumn::DateTime].toLongLong();
-            m_testInfoList.append(TestResults(WPM, accuracy, testDuration, timestamp));
+            m_testResultsList.push_back(TestResults(WPM, accuracy, testDuration, timestamp));
         }
     }
 }
@@ -109,7 +109,7 @@ void TestResultsModel::saveToFile(QString path)
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << "wpm,accuracy,testDuration,timestamp\n";
-        for (TestResults& result : m_testInfoList) {
+        for (TestResults& result : m_testResultsList) {
             out << result.WPM() << ","
                 << result.accuracy() << ","
                 << result.testDuration() << ","
