@@ -10,7 +10,8 @@ TestResults::TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration)
 
 }
 
-TestResults::TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration, qint64 timestamp)
+TestResults::TestResults(unsigned WPM, unsigned accuracy,
+                         unsigned testDuration, long long timestamp)
     : m_WPM{WPM}, m_accuracy{accuracy}, m_testDuration{testDuration},
       m_timestamp{timestamp}
 {

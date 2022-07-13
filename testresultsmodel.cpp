@@ -97,7 +97,7 @@ void TestResultsModel::loadFromFile(QFile file)
             unsigned WPM = row[ResultsColumn::WPM].toUInt();
             unsigned accuracy = row[ResultsColumn::Accuracy].toUInt();
             unsigned testDuration = row[ResultsColumn::TestDuration].toUInt();
-            qint64 timestamp = row[ResultsColumn::DateTime].toLongLong();
+            long long timestamp = row[ResultsColumn::DateTime].toLongLong();
             m_testResultsList.push_back(TestResults(WPM, accuracy, testDuration, timestamp));
         }
     }

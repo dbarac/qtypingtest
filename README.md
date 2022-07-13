@@ -27,7 +27,7 @@ $ sudo pacman -S qt6-base qt6-declarative qt6-charts qtcreator
 $ git clone https://github.com/dbarac/qtypingtest.git
 $ cd qtypingtest
 $ mkdir build && cd build/
-$ qmake6 -makefile
+$ qmake6 -makefile ..
 $ make -j
 ```
 

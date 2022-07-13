@@ -10,16 +10,16 @@ class TestResults
 {
 public:
     TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration);
-    TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration, qint64 timestamp);
+    TestResults(unsigned WPM, unsigned accuracy, unsigned testDuration, long long timestamp);
     unsigned WPM() const;
     unsigned accuracy() const;
     unsigned testDuration() const;
-    qint64 timestamp() const;
+    long long timestamp() const;
 private:
     unsigned m_WPM;
     unsigned m_accuracy;
     unsigned m_testDuration;
-    qint64 m_timestamp;
+    long long m_timestamp;
 };
 
 #endif // TESTINFO_H

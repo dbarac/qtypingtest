@@ -6,8 +6,8 @@ Item {
     id: testInterface
     implicitHeight: 630
     state: "testReady"
-    property int testDuration: 5
-    property int nextTestDuration: 5
+    property int testDuration: 15
+    property int nextTestDuration: 15
     property int remainingTime: testDuration
 
     states: [
@@ -82,8 +82,8 @@ Item {
         anchors.top: parent.top
         anchors.left: testPrompt.left
         propertyName: "duration:"
-        possibleValues: ["5", "15", "30", "60"]
-        defaultValue: "5"
+        possibleValues: ["15", "30", "60"]
+        defaultValue: "15"
         onButtonClicked: (duration) => {
             testInterface.nextTestDuration = parseInt(duration)
             if (testInterface.state === "testReady") {

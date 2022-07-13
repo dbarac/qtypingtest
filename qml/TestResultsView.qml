@@ -11,7 +11,7 @@ Item {
         id: durationSelector
         anchors.left: resultsTable.left
         propertyName: "duration:"
-        possibleValues: ["all", "5", "15", "30", "60"]
+        possibleValues: ["all", "15", "30", "60"]
         defaultValue: "all"
         onButtonClicked: (value) => {
             if (value === "all") {
