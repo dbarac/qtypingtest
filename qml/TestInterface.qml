@@ -14,20 +14,22 @@ Item {
         State { name: "testReady"
             PropertyChanges { target: hintRect; opacity: 1.0 }
             PropertyChanges { target: currentTestResults; opacity: 0.0 }
+            PropertyChanges { target: remainingTimeStr; opacity: 1.0 }
         },
         State { name: "testActive"
             PropertyChanges { target: hintRect; opacity: 0.0 }
-            //PropertyChanges { target: currentTestResults; opacity: 0.0 }
         },
         State { name: "testFinished"
-            PropertyChanges { target: hintRect; opacity: 0.0 }
             PropertyChanges { target: restartButton; focus: true }
+            PropertyChanges { target: hintRect; opacity: 0.0 }
             PropertyChanges { target: currentTestResults; opacity: 1.0 }
+            PropertyChanges { target: remainingTimeStr; opacity: 0.0 }
         }
     ]
     transitions: Transition {
         NumberAnimation { target: hintRect; property: "opacity"; duration: 250 }
         NumberAnimation { target: currentTestResults; property: "opacity"; duration: 250 }
+        NumberAnimation { target: remainingTimeStr; property: "opacity"; duration: 250 }
     }
 
     function finishTest() {
@@ -181,12 +183,12 @@ Item {
         activeFocusOnTab: true
         visible: parent.state !== "testFinished"
         onTextEdited: {
-            if (parent.state === "testReady") {
+            if (testInterface.state === "testReady") {
                 // start the test automatically
                 // when the user starts typing
-                parent.state = "testActive"
+                testInterface.state = "testActive"
             }
-            if (parent.state === "testActive") {
+            if (testInterface.state === "testActive") {
                 // track progress and update test prompt
                 typingTest.processKbInput(testInput.text)
             }

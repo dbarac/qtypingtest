@@ -1,5 +1,4 @@
-QT += quick
-QT += charts
+QT += qml quick charts
 
 SOURCES += \
         main.cpp \
@@ -8,8 +7,9 @@ SOURCES += \
         resultssortfilterproxymodel.cpp \
         typingtest.cpp
 
-resources.files = main.qml DetailedTestResults.qml TestInterface.qml TitleBar.qml \
-    TestResultsView.qml RadioSelector.qml
+resources.files = main.qml \
+    qml/DetailedTestResults.qml qml/TestInterface.qml qml/TitleBar.qml \
+    qml/TestResultsView.qml qml/RadioSelector.qml
 
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
@@ -33,6 +33,4 @@ HEADERS += \
     resultssortfilterproxymodel.h \
     typingtest.h
 
-DISTFILES += \
-    DetailedTestResults.qml \
-    TestInterface.qml
+DISTFILES += qml/*

@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("testResultsModel", testResults);
     engine.rootContext()->setContextProperty("resultsProxyModel", proxyModel);
 
-    const QUrl url(u"qrc:/qtypetest/main.qml"_qs);
+    const QUrl url(u"qrc:/qtypingtest/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
