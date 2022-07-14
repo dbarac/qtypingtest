@@ -34,7 +34,7 @@ int TestResultsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_testResultsList.size();
+    return static_cast<int>(m_testResultsList.size());
 }
 
 int TestResultsModel::columnCount(const QModelIndex &parent) const
@@ -74,7 +74,8 @@ QVariant TestResultsModel::data(const QModelIndex &index, int role) const
 
 void TestResultsModel::appendEntry(unsigned WPM, unsigned accuracy, unsigned testDuration)
 {
-    beginInsertRows(QModelIndex(), m_testResultsList.size(), m_testResultsList.size());
+    beginInsertRows(QModelIndex(), static_cast<int>(m_testResultsList.size()),
+                    static_cast<int>(m_testResultsList.size()));
     m_testResultsList.push_back(TestResults(WPM, accuracy, testDuration));
     endInsertRows();
 }

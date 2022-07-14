@@ -85,6 +85,9 @@ void TypingTest::processKbInput(QString& input)
                 QString("<u>%1</u>").arg(nextTestWord);
             m_testPromptUntyped.remove(0, nextTestWord.size()+1);
         }
+        /* The GUI should clear the TextInput field
+         * after space was pressed. */
+        m_prevInputLen = 0;
     } else {
         /* Set color for each typed letter of current word,
          * depending on correctness. */
