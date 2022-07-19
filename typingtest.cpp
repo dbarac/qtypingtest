@@ -87,12 +87,12 @@ void TypingTest::processKbInput(const QString& input, bool backspacePressed, boo
     } else {
         /* Set color for each typed letter of current word,
          * depending on correctness. */
-        colorCurrentWord(currentTestWord, input);
+        setCurrentWordColor(currentTestWord, input);
     }
     updateTestPrompt(resetTestPrompt);
 }
 
-void TypingTest::colorCurrentWord(const QString& currentWord, const QString& userInput)
+void TypingTest::setCurrentWordColor(const QString& currentWord, const QString& userInput)
 {
     QString color;
     m_testPromptCurrentWord.clear();

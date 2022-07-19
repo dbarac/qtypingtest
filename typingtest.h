@@ -19,7 +19,7 @@ public:
     Q_INVOKABLE unsigned calculateAccuracy() const;
 private:
     bool newCharIsCorrect(const QString& currentWord, const QString& input) const;
-    void colorCurrentWord(const QString& currentWord, const QString& input);
+    void setCurrentWordColor(const QString& currentWord, const QString& input);
     void sampleWordDataset();
     void updateTestPrompt(bool initialize);
 
