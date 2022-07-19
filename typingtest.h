@@ -11,14 +11,14 @@ class TypingTest : public QObject
     Q_OBJECT
     Q_PROPERTY(QString testPrompt READ testPrompt NOTIFY testPromptChanged)
 public:
-    explicit TypingTest(std::vector<QString>& wordDataset, unsigned wordsPerSample, QObject *parent = nullptr);
+    explicit TypingTest(const std::vector<QString>& wordDataset, unsigned wordsPerSample, QObject *parent = nullptr);
     QString testPrompt() const;
     Q_INVOKABLE void reset();
-    Q_INVOKABLE void processKbInput(QString& input, bool backspacePressed, bool spacePressed);
-    Q_INVOKABLE unsigned calculateWPM(unsigned testTimeSec);
-    Q_INVOKABLE unsigned calculateAccuracy();
+    Q_INVOKABLE void processKbInput(const QString& input, bool backspacePressed, bool spacePressed);
+    Q_INVOKABLE unsigned calculateWPM(unsigned testTimeSec) const;
+    Q_INVOKABLE unsigned calculateAccuracy() const;
 private:
-    bool newCharIsCorrect(const QString& currentWord, QString& input);
+    bool newCharIsCorrect(const QString& currentWord, const QString& input) const;
     void colorCurrentWord(const QString& currentWord, const QString& input);
     void sampleWordDataset();
     void updateTestPrompt(bool initialize);
@@ -36,7 +36,7 @@ private:
     QString m_testPromptUntyped;
 
     std::vector<QString> m_currentWordSample; /* words which are currently on the screen */
-    std::vector<QString>& m_wordDataset;
+    const std::vector<QString>& m_wordDataset;
     /* for sampling the word dataset */
     std::random_device m_rd;
     std::mt19937 m_rng;

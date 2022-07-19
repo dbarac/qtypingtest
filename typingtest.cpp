@@ -5,7 +5,7 @@
 
 #include "typingtest.h"
 
-TypingTest::TypingTest(std::vector<QString>& wordDataset,
+TypingTest::TypingTest(const std::vector<QString>& wordDataset,
                        unsigned wordsPerSample, QObject *parent)
     : QObject{parent}, m_wordsPerSample{wordsPerSample},
       m_wordDataset{wordDataset}, m_rng{m_rd()},
@@ -28,12 +28,12 @@ void TypingTest::sampleWordDataset()
     m_currentWordIdx = 0;
     m_currentWordSample = std::vector<QString>();
     for (unsigned i = 0; i < m_wordsPerSample; i++) {
-        QString& randomWord = m_wordDataset[m_randomWordIdx(m_rng)];
+        const QString& randomWord = m_wordDataset[m_randomWordIdx(m_rng)];
         m_currentWordSample.push_back(randomWord);
     }
 }
 
-bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
+bool TypingTest::newCharIsCorrect(const QString& currentWord, const QString& input) const
 {
     if (input.size() > currentWord.size()) {
         return input.endsWith(" ");
@@ -49,9 +49,9 @@ bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
  * - Go to the next word if space was pressed.
  * - Load new word sample if all words in the current sample were typed.
  */
-void TypingTest::processKbInput(QString& input, bool backspacePressed, bool spacePressed)
+void TypingTest::processKbInput(const QString& input, bool backspacePressed, bool spacePressed)
 {
-    QString& currentTestWord = m_currentWordSample[m_currentWordIdx];
+    const QString& currentTestWord = m_currentWordSample[m_currentWordIdx];
     QString wordColor;
     bool resetTestPrompt = false;
 
@@ -65,7 +65,7 @@ void TypingTest::processKbInput(QString& input, bool backspacePressed, bool spac
     if (spacePressed) {
         /* Update accepted character count, set color for typed word
          * and change active word in test prompt. */
-        QStringView typedWord(&input[0], input.size()-1);
+        QStringView typedWord(input.constData(), input.size()-1);
         if (typedWord == currentTestWord) {
             m_totalAcceptedChars += input.size();
             wordColor = "#fae1c3";
@@ -79,7 +79,7 @@ void TypingTest::processKbInput(QString& input, bool backspacePressed, bool spac
             sampleWordDataset();
             resetTestPrompt = true;
         } else {
-            QString& nextTestWord = m_currentWordSample[m_currentWordIdx];
+            const QString& nextTestWord = m_currentWordSample[m_currentWordIdx];
             m_testPromptCurrentWord =
                 QString("<u>%1</u>").arg(nextTestWord);
             m_testPromptUntyped.remove(0, nextTestWord.size()+1);
@@ -147,13 +147,13 @@ void TypingTest::updateTestPrompt(bool initialize=false) {
  * Calculate the number of correctly typed words per minute.
  * Assume average word length is 5 like on most typing websites.
  */
-unsigned TypingTest::calculateWPM(unsigned testTimeSec)
+unsigned TypingTest::calculateWPM(unsigned testTimeSec) const
 {
     float wpm = static_cast<float>(m_totalAcceptedChars) / 5 * 60. / testTimeSec;
     return static_cast<unsigned>(wpm);
 }
 
-unsigned TypingTest::calculateAccuracy()
+unsigned TypingTest::calculateAccuracy() const
 {
     float acc = static_cast<float>(m_correctChars) / m_totalTypedChars;
     return static_cast<unsigned>(acc * 100);
