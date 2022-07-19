@@ -16,7 +16,6 @@ TypingTest::TypingTest(std::vector<QString>& wordDataset,
 
 void TypingTest::reset()
 {
-    m_prevInputLen = 0;
     m_correctChars = 0;
     m_totalTypedChars = 0;
     m_totalAcceptedChars = 0;
@@ -50,22 +49,22 @@ bool TypingTest::newCharIsCorrect(const QString& currentWord, QString& input)
  * - Go to the next word if space was pressed.
  * - Load new word sample if all words in the current sample were typed.
  */
-void TypingTest::processKbInput(QString& input)
+void TypingTest::processKbInput(QString& input, bool backspacePressed, bool spacePressed)
 {
     QString& currentTestWord = m_currentWordSample[m_currentWordIdx];
     QString wordColor;
     bool resetTestPrompt = false;
 
     /* Update character counts only if keypress was not backspace. */
-    if (input.size() > m_prevInputLen) {
+    if (!backspacePressed) {
         if (newCharIsCorrect(currentTestWord, input)) {
             m_correctChars++;
         }
         m_totalTypedChars++;
     }
-    if (!input.isEmpty() && input.endsWith(" ")) {
-        /* User pressed space. Update accepted character count,
-         * set color for typed word and change active word in test prompt. */
+    if (spacePressed) {
+        /* Update accepted character count, set color for typed word
+         * and change active word in test prompt. */
         QStringView typedWord(&input[0], input.size()-1);
         if (typedWord == currentTestWord) {
             m_totalAcceptedChars += input.size();
@@ -85,15 +84,11 @@ void TypingTest::processKbInput(QString& input)
                 QString("<u>%1</u>").arg(nextTestWord);
             m_testPromptUntyped.remove(0, nextTestWord.size()+1);
         }
-        /* The GUI should clear the TextInput field
-         * after space was pressed. */
-        m_prevInputLen = 0;
     } else {
         /* Set color for each typed letter of current word,
          * depending on correctness. */
         colorCurrentWord(currentTestWord, input);
     }
-    m_prevInputLen = input.size();
     updateTestPrompt(resetTestPrompt);
 }
 

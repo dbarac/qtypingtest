@@ -14,7 +14,7 @@ public:
     explicit TypingTest(std::vector<QString>& wordDataset, unsigned wordsPerSample, QObject *parent = nullptr);
     QString testPrompt() const;
     Q_INVOKABLE void reset();
-    Q_INVOKABLE void processKbInput(QString& input);
+    Q_INVOKABLE void processKbInput(QString& input, bool backspacePressed, bool spacePressed);
     Q_INVOKABLE unsigned calculateWPM(unsigned testTimeSec);
     Q_INVOKABLE unsigned calculateAccuracy();
 private:
@@ -25,7 +25,6 @@ private:
 
     unsigned m_currentWordIdx = 0;
     unsigned m_wordsPerSample = 0;
-    unsigned m_prevInputLen = 0;
     unsigned m_correctChars = 0;
     unsigned m_totalTypedChars = 0;
     unsigned m_totalAcceptedChars = 0; /* for calculating WPM */

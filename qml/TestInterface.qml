@@ -182,21 +182,34 @@ Item {
         focus: true
         activeFocusOnTab: true
         visible: parent.state !== "testFinished"
+
+        property bool keystrokeIsPrintable: false
+        property bool backspacePressed: false
+        property bool spacePressed: false
+        Keys.onPressed: (event) => {
+            keystrokeIsPrintable = event.text.length > 0
+            backspacePressed = event.key === Qt.Key_Backspace
+            spacePressed = event.key === Qt.Key_Space
+
+        }
+        // called after Keys.onPressed callback
         onTextEdited: {
-            if (testInterface.state === "testReady") {
+            if (testInterface.state === "testReady" && keystrokeIsPrintable) {
                 // start the test automatically
                 // when the user starts typing
                 testInterface.state = "testActive"
             }
-            if (testInterface.state === "testActive") {
-                // track progress and update test prompt
-                typingTest.processKbInput(testInput.text)
-            }
 
-            // clear input field if the user finished typing the current word
-            let pressedSpace = testInput.text.length > 0 && testInput.text.slice(-1) === " "
-            if (pressedSpace) {
-                testInput.text = ""
+            if (testInterface.state === "testActive") {
+                if (keystrokeIsPrintable || spacePressed || backspacePressed) {
+                    // track progress and update test prompt
+                    typingTest.processKbInput(testInput.text, backspacePressed, spacePressed)
+
+                    // clear input field if the user finished typing the current word
+                    if (spacePressed) {
+                        testInput.text = ""
+                    }
+                }
             }
         }
     }
