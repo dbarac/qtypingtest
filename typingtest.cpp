@@ -90,27 +90,27 @@ void TypingTest::processKbInput(const QString& input, bool backspacePressed, boo
     updateTestPrompt(resetTestPrompt);
 }
 
+/*
+ * Color each letter of the current word:
+ *  - for typed letters choose color (white/red) depending on correctness
+ *  - keep default color (gray, defined in TestInterface.qml) if the letter wasn't typed yet
+ */
 void TypingTest::setCurrentWordColor(const QString& currentWord, const QString& userInput)
 {
-    QString color;
+    unsigned numTypedChars = std::min(currentWord.size(), userInput.size());
+    unsigned numUntypedChars = currentWord.size() - numTypedChars;
     m_testPromptCurrentWord.clear();
-    m_testPromptCurrentWord.append("<u>");
-    unsigned len = currentWord.size();
-    for (unsigned i = 0; i < len; i++) {
-        if (i == userInput.size()) {
-            /* append untyped part of word (with default color) */
-            m_testPromptCurrentWord.append(QStringView(currentWord).right(len-i));
-            break;
-        }
-        if (userInput[i] == currentWord[i]) {
-            color = "#fae1c3";
-        } else {
-            color = "#bb1e10"; /* error */
+    for (unsigned i = 0; i < numTypedChars; i++) {
+        QString color = "#fae1c3";
+        if (userInput[i] != currentWord[i]) {
+            color = "#bb1e10";
         }
         m_testPromptCurrentWord.append(
             QString("<font color='%1'>%2</font>").arg(color, currentWord[i]));
     }
-    m_testPromptCurrentWord.append("</u>");
+    /* append untyped part of word (with default color) */
+    m_testPromptCurrentWord.append(QStringView(currentWord).right(numUntypedChars));
+    m_testPromptCurrentWord = QString("<u>%1</u>").arg(m_testPromptCurrentWord);
 }
 
 /*
