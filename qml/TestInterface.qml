@@ -190,7 +190,6 @@ Item {
             keystrokeIsPrintable = event.text.length > 0
             backspacePressed = event.key === Qt.Key_Backspace
             spacePressed = event.key === Qt.Key_Space
-
         }
         // called after Keys.onPressed callback
         onTextEdited: {

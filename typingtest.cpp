@@ -125,14 +125,11 @@ QString TypingTest::testPrompt() const {
 void TypingTest::updateTestPrompt(bool initialize=false) {
     if (initialize) {
         m_testPromptFinished.clear();
-        m_testPromptCurrentWord =
-            QString("<u>%1</u>").arg(m_currentWordSample[0]);
+        m_testPromptCurrentWord = QString("<u>%1</u>").arg(m_currentWordSample[0]);
         m_testPromptUntyped.clear();
-        for (unsigned i = 1; i < m_wordsPerSample; i++) {
-            QString& word = m_currentWordSample[i];
-            m_testPromptUntyped.append(" ");
-            m_testPromptUntyped.append(word);
-        }
+        m_testPromptUntyped = std::accumulate(
+            m_currentWordSample.begin()+1, m_currentWordSample.end(), m_testPromptUntyped,
+            [](QString& untypedWords, QString& word) { return untypedWords + " " + word; });
     }
     m_testPrompt.clear();
     m_testPrompt.append(m_testPromptFinished);
