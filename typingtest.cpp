@@ -2,13 +2,14 @@
 #include <QDebug>
 #include <QStringView>
 #include <QString>
+#include <algorithm>
 
 #include "typingtest.h"
 
 TypingTest::TypingTest(const std::vector<QString>& wordDataset,
                        unsigned wordsPerSample, QObject *parent)
     : QObject{parent}, m_wordsPerSample{wordsPerSample},
-      m_wordDataset{wordDataset}, m_rng{m_rd()},
+      m_currentWordSample(wordsPerSample, ""), m_wordDataset{wordDataset}, m_rng{m_rd()},
       m_randomWordIdx{std::uniform_int_distribution<int>(0, m_wordDataset.size()-1)}
 {
     reset();
@@ -26,11 +27,8 @@ void TypingTest::reset()
 void TypingTest::sampleWordDataset()
 {
     m_currentWordIdx = 0;
-    m_currentWordSample = std::vector<QString>();
-    for (unsigned i = 0; i < m_wordsPerSample; i++) {
-        const QString& randomWord = m_wordDataset[m_randomWordIdx(m_rng)];
-        m_currentWordSample.push_back(randomWord);
-    }
+    auto getRandomWord = [&] { return m_wordDataset[m_randomWordIdx(m_rng)]; };
+    std::generate(m_currentWordSample.begin(), m_currentWordSample.end(), getRandomWord);
 }
 
 bool TypingTest::newCharIsCorrect(const QString& currentWord, const QString& input) const
